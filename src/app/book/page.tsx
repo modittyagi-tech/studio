@@ -80,30 +80,16 @@ export default function BookPage() {
       children: 0,
       rooms: 1,
       dates: {
-        from: undefined,
-        to: undefined,
+        from: addDays(new Date(), 1),
+        to: addDays(new Date(), 5),
       }
     },
   });
-  
-  useEffect(() => {
-    availabilityForm.setValue('dates', {
-      from: addDays(new Date(), 1),
-      to: addDays(new Date(), 5),
-    });
-  }, [availabilityForm.setValue]);
-
 
   const bookingForm = useForm<z.infer<typeof bookingSchema>>({
     resolver: zodResolver(bookingSchema),
   });
 
-  // Effect to safely initialize dates on the client to avoid hydration mismatch
-  const [hasMounted, setHasMounted] = useState(false);
-  useEffect(() => {
-    setHasMounted(true);
-  }, []);
-  
   // Calculate total guests for display and validation
   const totalGuests = useMemo(() => {
     const values = availabilityForm.watch();
@@ -228,15 +214,7 @@ export default function BookPage() {
     setSearchPerformed(false);
   }
 
-  const nights = searchParams?.dates.from && searchParams?.dates.to ? differenceInDays(searchParams.dates.to, searchParams.dates.from) : 0;
-  
-  if (!hasMounted) {
-    return (
-      <div className="flex justify-center items-center min-h-screen">
-          <div className="loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-12 w-12"></div>
-      </div>
-    );
-  }
+  const nights = searchParams?.dates.from && searchParams?.dates.to ? differenceInDays(searchParams.dates.to, searchParams.dates.to) : 0;
   
   if (step === 'confirmation' && finalBookingId) {
     return (
@@ -271,7 +249,7 @@ export default function BookPage() {
   }
 
   if (selectedStay && searchParams) {
-    const heroImage = PlaceHolderImages.find(i => i.id === (selectedStay.images && selectedStay.images.length > 0 ? selectedStay.images[0] : '')) || {imageUrl: `https://picsum.photos/seed/${selectedStay.id}/800/600`, imageHint: selectedStay.name, description: selectedStay.name};
+    const heroImage = PlaceHolderImages.find(i => i.id === (selectedStay.images?.[0])) || {imageUrl: `https://picsum.photos/seed/${selectedStay.id}/800/600`, imageHint: selectedStay.name, description: selectedStay.name};
     const totalPrice = nights * selectedStay.price_per_night * searchParams.rooms;
     return (
         <div className="bg-background">
@@ -507,7 +485,7 @@ export default function BookPage() {
                         </MotionDiv>
                         <div className="grid md:grid-cols-1 gap-8">
                             {availableStays.map((stay, index) => {
-                                 const image = PlaceHolderImages.find(img => img.id === (stay.images && stay.images.length > 0 ? stay.images[0] : '')) || {imageUrl: `https://picsum.photos/seed/${stay.id}/800/600`, imageHint: stay.name, description: stay.name};
+                                 const image = PlaceHolderImages.find(img => img.id === (stay.images?.[0])) || {imageUrl: `https://picsum.photos/seed/${stay.id}/800/600`, imageHint: stay.name, description: stay.name};
                                  const totalPrice = nights * stay.price_per_night * searchParams!.rooms;
                                 return (
                                 <MotionDiv key={stay.id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.1 }}>
