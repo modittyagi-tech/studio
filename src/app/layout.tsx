@@ -28,8 +28,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="scroll-smooth" suppressHydrationWarning>
-      <body className={`font-body antialiased bg-background text-foreground ${fontHeadline.variable} ${fontBody.variable}`}>
+    <html lang="en" className="scroll-smooth">
+      <body suppressHydrationWarning className={`font-body antialiased bg-background text-foreground ${fontHeadline.variable} ${fontBody.variable}`}>
         <SiteHeader />
         <main>{children}</main>
         <SiteFooter />
