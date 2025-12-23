@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from 'react';
@@ -24,7 +25,7 @@ export function SiteHeader() {
         </nav>
         <div className="hidden md:flex items-center space-x-2">
           <Button asChild>
-            <Link href="#booking">Book Your Stay</Link>
+            <Link href="/book">Book Now</Link>
           </Button>
         </div>
         <div className="md:hidden">
@@ -55,7 +56,7 @@ export function SiteHeader() {
               ))}
             </nav>
             <Button asChild>
-              <Link href="#booking" onClick={() => setIsMenuOpen(false)}>Book Your Stay</Link>
+              <Link href="/book" onClick={() => setIsMenuOpen(false)}>Book Now</Link>
             </Button>
           </div>
         </MotionDiv>
@@ -63,3 +64,5 @@ export function SiteHeader() {
     </header>
   );
 }
+
+    

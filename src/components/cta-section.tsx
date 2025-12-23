@@ -1,3 +1,4 @@
+
 "use client";
 import { Button } from './ui/button';
 import Link from 'next/link';
@@ -21,7 +22,7 @@ export function CtaSection() {
                     </p>
                     <div className="mt-8">
                         <Button size="lg" variant="secondary" asChild>
-                            <Link href="#booking">Book Your Stay Now</Link>
+                            <Link href="/book">Book Your Stay Now</Link>
                         </Button>
                     </div>
                 </MotionDiv>
@@ -29,3 +30,5 @@ export function CtaSection() {
         </div>
     );
 }
+
+    

@@ -62,7 +62,6 @@ export const navLinks: NavLink[] = [
     { href: '/experience', label: 'Experience' },
     { href: '/gallery', label: 'Gallery' },
     { href: '/about', label: 'About' },
-    { href: '/book', label: 'Book' },
     { href: '/contact', label: 'Contact' },
 ];
 
@@ -79,3 +78,5 @@ export const footerLinks = {
         { href: '/cancellation-policy', label: 'Cancellation Policy' },
     ],
 };
+
+    

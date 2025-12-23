@@ -1,6 +1,9 @@
+
 "use client";
 
 import { motion } from "framer-motion";
+import { Button } from "./ui/button";
+import Link from "next/link";
 
 export function Hero() {
   return (
@@ -33,14 +36,16 @@ export function Hero() {
             A luxury dome stay where silence, comfort, and the mountains meet.
           </p>
 
-          <a
-            href="#booking"
-            className="inline-block rounded-md bg-white px-10 py-4 text-sm font-medium tracking-wide text-black transition hover:bg-neutral-200"
-          >
-            Book Your Stay
-          </a>
+          <Button size="lg" asChild>
+            <Link href="/book" className="bg-white text-black hover:bg-neutral-200">
+                Book Your Stay
+            </Link>
+          </Button>
+
         </motion.div>
       </div>
     </section>
   );
 }
+
+    
