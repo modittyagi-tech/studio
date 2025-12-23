@@ -36,8 +36,8 @@ export function Hero() {
             A luxury dome stay where silence, comfort, and the mountains meet.
           </p>
 
-          <Button size="lg" asChild>
-            <Link href="/book" className="bg-white text-black hover:bg-neutral-200">
+          <Button size="lg" asChild variant="primary">
+            <Link href="/book">
                 Book Your Stay
             </Link>
           </Button>
