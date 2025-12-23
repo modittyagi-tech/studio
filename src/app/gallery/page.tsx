@@ -7,7 +7,7 @@ import Section from "@/components/section";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { MotionDiv } from "@/components/motion";
 import Image from "next/image";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
 
 const galleryImages = PlaceHolderImages.filter(img => 
   ['stay-1', 'stay-2', 'stay-3', 'highlight-1', 'highlight-2', 'experience-1', 'stay-1-gallery-2', 'stay-2-gallery-1', 'stay-3-gallery-1', 'stay-3-gallery-2'].includes(img.id)
@@ -15,6 +15,12 @@ const galleryImages = PlaceHolderImages.filter(img =>
 
 export default function GalleryPage() {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [selectedImageAlt, setSelectedImageAlt] = useState<string>('');
+
+  const handleImageClick = (image: {imageUrl: string, description: string}) => {
+    setSelectedImage(image.imageUrl);
+    setSelectedImageAlt(image.description);
+  };
 
   return (
     <div>
@@ -35,7 +41,7 @@ export default function GalleryPage() {
             >
               <div
                 className="group relative overflow-hidden rounded-2xl shadow-sm hover:shadow-xl transition-shadow duration-300 cursor-pointer"
-                onClick={() => setSelectedImage(image.imageUrl)}
+                onClick={() => handleImageClick(image)}
               >
                 <Image
                   src={image.imageUrl}
@@ -53,11 +59,13 @@ export default function GalleryPage() {
       </Section>
       
       <Dialog open={!!selectedImage} onOpenChange={() => setSelectedImage(null)}>
-        <DialogContent className="max-w-4xl p-0 border-0 bg-transparent">
+        <DialogContent className="max-w-4xl w-auto p-0 border-0 bg-transparent shadow-none">
+          <DialogTitle className="sr-only">Enlarged Gallery Image</DialogTitle>
+          <DialogDescription className="sr-only">{selectedImageAlt}</DialogDescription>
           {selectedImage && (
             <Image
               src={selectedImage}
-              alt="Selected image"
+              alt={selectedImageAlt}
               width={1600}
               height={1200}
               className="w-full h-auto object-contain rounded-lg"
