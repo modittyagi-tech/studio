@@ -4,12 +4,17 @@ import Link from 'next/link';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Button } from './ui/button';
 import { ArrowRight, Users, Bed } from 'lucide-react';
+import { MotionDiv } from './motion';
 
 export function StayCard({ stay }: { stay: Stay }) {
   const image = PlaceHolderImages.find(img => img.id === stay.images[0]);
 
   return (
-    <div className="bg-card border rounded-xl overflow-hidden group transition-all duration-300 hover:shadow-xl hover:-translate-y-2 h-full flex flex-col">
+    <MotionDiv
+      whileHover={{ y: -6 }}
+      transition={{ duration: 0.4, ease: "easeOut" }}
+      className="overflow-hidden rounded-2xl bg-card border h-full flex flex-col group transition-shadow duration-300 hover:shadow-xl"
+    >
       {image && (
         <Link href={`/stays/${stay.slug}`} className="block overflow-hidden">
           <div className="aspect-w-4 aspect-h-3">
@@ -17,8 +22,8 @@ export function StayCard({ stay }: { stay: Stay }) {
               src={image.imageUrl}
               alt={stay.name}
               width={600}
-              height={400}
-              className="object-cover transition-transform duration-500 group-hover:scale-105"
+              height={450}
+              className="object-cover transition-transform duration-700 group-hover:scale-105"
               data-ai-hint={image.imageHint}
             />
           </div>
@@ -48,6 +53,6 @@ export function StayCard({ stay }: { stay: Stay }) {
           </Button>
         </div>
       </div>
-    </div>
+    </MotionDiv>
   );
 }
