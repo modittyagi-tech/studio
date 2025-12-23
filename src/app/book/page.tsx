@@ -370,24 +370,34 @@ export default function BookPage() {
                                 <FormItem>
                                 <Popover open={isDatePickerOpen} onOpenChange={setIsDatePickerOpen}>
                                     <PopoverTrigger asChild>
-                                        <Button
-                                            id="date"
-                                            variant={"outline"}
-                                            className={cn(
-                                            "w-full justify-start text-left font-normal h-16 text-base",
-                                            !field.value?.from && "text-muted-foreground"
-                                            )}
-                                        >
-                                            <CalendarIcon className="mr-3 h-5 w-5 text-primary/70" />
-                                            <div className="flex-1">
-                                                <p className="text-sm text-muted-foreground">Check-in</p>
-                                                {field.value?.from ? format(field.value.from, "LLL dd, y") : "Add date"}
-                                            </div>
-                                            <div className="flex-1">
-                                                <p className="text-sm text-muted-foreground">Check-out</p>
-                                                {field.value?.to ? format(field.value.to, "LLL dd, y") : "Add date"}
-                                            </div>
-                                        </Button>
+                                        <div className="grid grid-cols-2 gap-4">
+                                            <Button
+                                                variant={"outline"}
+                                                className={cn(
+                                                "w-full justify-start text-left font-normal h-16 text-base",
+                                                !field.value?.from && "text-muted-foreground"
+                                                )}
+                                            >
+                                                <CalendarIcon className="mr-3 h-5 w-5 text-primary/70" />
+                                                <div>
+                                                    <p className="text-sm text-muted-foreground">Check-in</p>
+                                                    {field.value?.from ? format(field.value.from, "LLL dd, y") : "Add date"}
+                                                </div>
+                                            </Button>
+                                            <Button
+                                                variant={"outline"}
+                                                className={cn(
+                                                "w-full justify-start text-left font-normal h-16 text-base",
+                                                !field.value?.to && "text-muted-foreground"
+                                                )}
+                                            >
+                                                <CalendarIcon className="mr-3 h-5 w-5 text-primary/70" />
+                                                <div>
+                                                    <p className="text-sm text-muted-foreground">Check-out</p>
+                                                    {field.value?.to ? format(field.value.to, "LLL dd, y") : "Add date"}
+                                                </div>
+                                            </Button>
+                                        </div>
                                     </PopoverTrigger>
                                     <PopoverContent className="w-auto p-0" align="start">
                                     <Calendar
@@ -578,5 +588,3 @@ if (typeof window !== 'undefined') {
     styleSheet.innerText = styles;
     document.head.appendChild(styleSheet);
 }
-
-    
