@@ -1,3 +1,4 @@
+
 export type Amenity = 'wifi' | 'jacuzzi' | 'pet-friendly' | 'kitchenette' | 'fireplace' | 'ac';
 
 export interface Stay {
@@ -11,6 +12,7 @@ export interface Stay {
   amenities: Amenity[];
   images: string[]; // array of image IDs from placeholder-images.json
   is_featured: boolean;
+  total_rooms: number;
 }
 
 export interface Testimonial {
@@ -25,3 +27,5 @@ export interface NavLink {
     href: string;
     label: string;
 }
+
+    

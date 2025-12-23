@@ -13,6 +13,7 @@ export const mockStays: Stay[] = [
     amenities: ['fireplace', 'pet-friendly', 'wifi'],
     images: ['stay-1', 'stay-1-gallery-1', 'stay-1-gallery-2'],
     is_featured: true,
+    total_rooms: 5,
   },
   {
     id: '2',
@@ -25,6 +26,7 @@ export const mockStays: Stay[] = [
     amenities: ['jacuzzi', 'kitchenette', 'wifi', 'ac'],
     images: ['stay-2', 'stay-2-gallery-1', 'stay-2-gallery-2'],
     is_featured: true,
+    total_rooms: 3,
   },
   {
     id: '3',
@@ -37,6 +39,7 @@ export const mockStays: Stay[] = [
     amenities: ['kitchenette', 'fireplace', 'pet-friendly', 'wifi'],
     images: ['stay-3', 'stay-3-gallery-1', 'stay-3-gallery-2'],
     is_featured: true,
+    total_rooms: 4,
   },
 ];
 
