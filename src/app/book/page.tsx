@@ -36,6 +36,7 @@ import type { DateRange } from "react-day-picker";
 import { MotionDiv } from "@/components/motion";
 import Image from "next/image";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
+import { Label } from "@/components/ui/label";
 
 
 const availabilitySchema = z.object({
@@ -467,7 +468,7 @@ export default function BookPage() {
 // Simple CSS for loader
 const styles = `
 .loader {
-    border-top-color: var(--primary);
+    border-top-color: hsl(var(--primary));
     -webkit-animation: spinner 1.5s linear infinite;
     animation: spinner 1.5s linear infinite;
 }
