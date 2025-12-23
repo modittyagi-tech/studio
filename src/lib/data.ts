@@ -10,7 +10,7 @@ export const mockStays: Stay[] = [
     price_per_night: 250,
     max_guests: 2,
     amenities: ['fireplace', 'pet-friendly', 'wifi'],
-    images: ['stay-1'],
+    images: ['stay-1', 'stay-1-gallery-1', 'stay-1-gallery-2'],
     is_featured: true,
   },
   {
@@ -22,7 +22,7 @@ export const mockStays: Stay[] = [
     price_per_night: 400,
     max_guests: 2,
     amenities: ['jacuzzi', 'kitchenette', 'wifi', 'ac'],
-    images: ['stay-2'],
+    images: ['stay-2', 'stay-2-gallery-1', 'stay-2-gallery-2'],
     is_featured: true,
   },
   {
@@ -34,7 +34,7 @@ export const mockStays: Stay[] = [
     price_per_night: 350,
     max_guests: 4,
     amenities: ['kitchenette', 'fireplace', 'pet-friendly', 'wifi'],
-    images: ['stay-3'],
+    images: ['stay-3', 'stay-3-gallery-1', 'stay-3-gallery-2'],
     is_featured: true,
   },
 ];

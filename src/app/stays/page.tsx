@@ -1,6 +1,7 @@
 import { PageHeader } from "@/components/page-header";
 import { mockStays } from '@/lib/data';
 import { StayCard } from '@/components/stay-card';
+import Section from "@/components/section";
 
 export default function StaysPage() {
     return (
@@ -9,13 +10,13 @@ export default function StaysPage() {
                 title="Our Stays"
                 description="Find your perfect escape. Each stay is a unique blend of comfort and wilderness."
             />
-            <div className="container max-w-7xl py-16">
-                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <Section>
+                 <div className="grid md:grid-cols-2 gap-12">
                     {mockStays.map((stay) => (
                         <StayCard key={stay.id} stay={stay} />
                     ))}
                 </div>
-            </div>
+            </Section>
         </div>
     );
 }

@@ -15,20 +15,56 @@
     {
       "id": "stay-1",
       "description": "Interior of the 'Forest Dream' glamping tent.",
-      "imageUrl": "https://images.unsplash.com/photo-1762255121620-3ca4c551404c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHx0ZW50JTIwaW50ZXJpb3J8ZW58MHx8fHwxNzY2NDc2NDQ3fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1525811902-f2342640856e?q=80&w=2942&auto=format&fit=crop",
       "imageHint": "tent interior"
+    },
+    {
+      "id": "stay-1-gallery-1",
+      "description": "A cozy reading nook inside the Forest Dream tent.",
+      "imageUrl": "https://picsum.photos/seed/stay1a/800/600",
+      "imageHint": "tent nook"
+    },
+    {
+      "id": "stay-1-gallery-2",
+      "description": "The private deck of the Forest Dream tent.",
+      "imageUrl": "https://images.unsplash.com/photo-1718330008715-25c9c046426d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8dGVudCUyMGRlY2t8ZW58MHx8fHwxNzY2NDgwNzQyfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "tent deck"
     },
     {
       "id": "stay-2",
       "description": "The 'Star Gazer' dome with a view of the night sky.",
-      "imageUrl": "https://images.unsplash.com/photo-1765739099942-749a729e5a83?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxnZW9kZXNpYyUyMGRvbWV8ZW58MHx8fHwxNzY2NDc2NDQ3fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1593696558434-639ef5163a8a?q=80&w=2940&auto=format&fit=crop",
       "imageHint": "geodesic dome"
+    },
+    {
+      "id": "stay-2-gallery-1",
+      "description": "The modern kitchenette inside the Star Gazer dome.",
+      "imageUrl": "https://images.unsplash.com/photo-1585261450736-67d578ff00b4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxkb21lJTIwa2l0Y2hlbnxlbnwwfHx8fDE3NjY0ODA3NDF8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "dome kitchen"
+    },
+    {
+      "id": "stay-2-gallery-2",
+      "description": "The private jacuzzi for the Star Gazer dome.",
+      "imageUrl": "https://picsum.photos/seed/stay2b/800/600",
+      "imageHint": "private jacuzzi"
     },
     {
       "id": "stay-3",
       "description": "The 'River Whisper' cabin by a serene river.",
-      "imageUrl": "https://images.unsplash.com/photo-1686241610492-056d93935fc1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8Y2FiaW4lMjByaXZlcnxlbnwwfHx8fDE3NjY0NzY0NDd8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1506452402125-4ca12740417c?q=80&w=2874&auto=format&fit=crop",
       "imageHint": "cabin river"
+    },
+    {
+      "id": "stay-3-gallery-1",
+      "description": "The living area of the River Whisper cabin.",
+      "imageUrl": "https://images.unsplash.com/photo-1598721987126-0e7bee3ba71f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8Y2FiaW4lMjBpbnRlcmlvcnxlbnwwfHx8fDE3NjY0ODA3NDF8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "cabin interior"
+    },
+    {
+      "id": "stay-3-gallery-2",
+      "description": "The porch of the River Whisper cabin overlooking the river.",
+      "imageUrl": "https://images.unsplash.com/photo-1553775317-114bf50f84ca?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxjYWJpbiUyMHBvcmNofGVufDB8fHx8MTc2NjQ4MDc0Mnww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "cabin porch"
     },
     {
       "id": "highlight-1",
