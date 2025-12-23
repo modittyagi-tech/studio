@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -73,21 +73,22 @@ export default function BookPage() {
     defaultValues: {
       adults: 2,
       children: 0,
-      dates: {
-        from: new Date(),
-        to: addDays(new Date(), 4),
-      }
     },
   });
 
-  const bookingForm = useForm<z.infer<typeof bookingSchema>>({
-    resolver: zodResolver(bookingSchema),
-    defaultValues: {
-      name: "",
-      email: "",
-      phone: "",
-    },
-  });
+  const [hasMounted, setHasMounted] = useState(false);
+  useEffect(() => {
+    setHasMounted(true);
+    availabilityForm.reset({
+        adults: 2,
+        children: 0,
+        dates: {
+            from: new Date(),
+            to: addDays(new Date(), 4),
+        }
+    });
+  }, [availabilityForm]);
+
 
   async function onCheckAvailability(values: z.infer<typeof availabilitySchema>) {
     setIsLoading(true);
@@ -178,7 +179,7 @@ export default function BookPage() {
   
   const totalGuests = availabilityForm.watch('adults') + availabilityForm.watch('children');
   const dateRange = availabilityForm.watch('dates');
-  const nights = dateRange.from && dateRange.to ? differenceInDays(dateRange.to, dateRange.from) : 0;
+  const nights = dateRange?.from && dateRange?.to ? differenceInDays(dateRange.to, dateRange.from) : 0;
 
   return (
     <div className="bg-background">
@@ -221,20 +222,28 @@ export default function BookPage() {
                                             variant={"ghost"}
                                             className={cn(
                                             "w-full justify-start text-left font-normal h-16 text-base",
-                                            !field.value.from && "text-muted-foreground"
+                                            !field.value?.from && "text-muted-foreground"
                                             )}
                                         >
                                             <div className="flex items-center w-full">
                                                 <CalendarIcon className="mr-4 h-6 w-6 text-primary/70" />
-                                                <div className="flex-1">
+                                                {!hasMounted ? (<div className="flex-1 space-y-1">
+                                                    <p className="text-sm font-medium w-20 h-4 bg-muted-foreground/20 rounded-md animate-pulse"></p>
+                                                    <p className="w-24 h-4 bg-muted-foreground/10 rounded-md animate-pulse"></p>
+                                                </div>) :
+                                                (<div className="flex-1">
                                                     <p className="text-sm font-medium">Check-in</p>
                                                     <p>{field.value?.from ? format(field.value.from, "LLL dd, y") : "Add date"}</p>
-                                                </div>
+                                                </div>)}
                                                 <ArrowRight className="h-4 w-4 mx-4 text-muted-foreground"/>
-                                                <div className="flex-1">
+                                                {!hasMounted ? (<div className="flex-1 space-y-1">
+                                                    <p className="text-sm font-medium w-20 h-4 bg-muted-foreground/20 rounded-md animate-pulse"></p>
+                                                    <p className="w-24 h-4 bg-muted-foreground/10 rounded-md animate-pulse"></p>
+                                                </div>) :
+                                                (<div className="flex-1">
                                                     <p className="text-sm font-medium">Check-out</p>
                                                     <p>{field.value?.to ? format(field.value.to, "LLL dd, y") : "Add date"}</p>
-                                                </div>
+                                                </div>)}
                                             </div>
                                         </Button>
                                     </PopoverTrigger>
@@ -242,7 +251,7 @@ export default function BookPage() {
                                     <Calendar
                                         initialFocus
                                         mode="range"
-                                        defaultMonth={field.value.from}
+                                        defaultMonth={field.value?.from}
                                         selected={field.value as DateRange}
                                         onSelect={field.onChange}
                                         numberOfMonths={2}
@@ -339,7 +348,7 @@ export default function BookPage() {
                         animate={{ opacity: 1, y: 0 }}
                     >
                         <h2 className="font-headline text-center text-4xl md:text-5xl text-primary">Available Stays</h2>
-                        <p className="mt-2 text-center text-muted-foreground">{format(dateRange.from!, 'PPP')} - {format(dateRange.to!, 'PPP')} ({nights} nights)</p>
+                        <p className="mt-2 text-center text-muted-foreground">{dateRange?.from && format(dateRange.from, 'PPP')} - {dateRange?.to && format(dateRange.to, 'PPP')} ({nights} nights)</p>
                     </MotionDiv>
                     <div className="grid md:grid-cols-1 gap-8">
                         {availableStays.map((stay, index) => {
@@ -491,5 +500,3 @@ if (typeof window !== 'undefined') {
     styleSheet.innerText = styles;
     document.head.appendChild(styleSheet);
 }
-
-    
