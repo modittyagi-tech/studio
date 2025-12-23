@@ -143,11 +143,13 @@ export default function BookPage() {
         const staysWithAvailability: AvailableStay[] = availableData
           .map((stay: any) => {
               const mock = mockStays.find(m => m.id === stay.id);
+              if (!mock) return null;
               return {
                   ...mock, // Get images, descriptions etc. from mock
                   ...stay, // Get live availability from supabase
               } as AvailableStay
           })
+          .filter(Boolean) // Filter out any null values
           .filter((stay: AvailableStay) => {
               const fitsGuests = ((stay.max_adults + stay.max_children) * values.rooms) >= (values.adults + values.children);
               const hasRooms = stay.available_rooms >= values.rooms;
@@ -593,27 +595,4 @@ function GuestInputControl({ form, name, label, min }: { form: any, name: "adult
     )
 }
 
-// Simple CSS for loader
-const styles = `
-.loader {
-    border-top-color: hsl(var(--primary));
-    -webkit-animation: spinner 1.5s linear infinite;
-    animation: spinner 1.5s linear infinite;
-}
-@-webkit-keyframes spinner {
-    0% { -webkit-transform: rotate(0deg); }
-    100% { -webkit-transform: rotate(360deg); }
-}
-@keyframes spinner {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-`;
-
-// Inject styles into the head
-if (typeof window !== 'undefined') {
-    const styleSheet = document.createElement("style");
-    styleSheet.type = "text/css";
-    styleSheet.innerText = styles;
-    document.head.appendChild(styleSheet);
-}
+    
