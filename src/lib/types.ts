@@ -29,4 +29,24 @@ export interface NavLink {
     label: string;
 }
 
+export type BookingStatus = 'pending' | 'confirmed' | 'cancelled';
+
+export interface Booking {
+    id: string;
+    created_at: string;
+    stay_id: string;
+    check_in: string;
+    check_out: string;
+    adults: number;
+    children: number;
+    rooms_booked: number;
+    guest_name: string;
+    guest_email: string;
+    guest_phone?: string;
+    special_requests?: string;
+    status: BookingStatus;
+    stays: {
+        name: string;
+    }
+}
     
