@@ -95,6 +95,18 @@
       "description": "Portrait of another happy guest.",
       "imageUrl": "https://images.unsplash.com/photo-1527980965255-d3b416303d12?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxzbWlsaW5nJTIwcGVyc29ufGVufDB8fHx8MTc2NjM4NTIyOHww&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "smiling person"
+    },
+    {
+      "id": "about-story",
+      "description": "A person writing in a notebook in a calm, natural setting.",
+      "imageUrl": "https://images.unsplash.com/photo-1499750310107-5fef28a66643?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxqb3VybmFsfGVufDB8fHx8MTc2NzAzMDI1Mnww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "journal nature"
+    },
+    {
+      "id": "about-location",
+      "description": "A wide, panoramic shot of a serene valley or mountain range at sunrise.",
+      "imageUrl": "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxtb3VudGFpbiUyMHJhbmdlfGVufDB8fHx8MTc2NzAzMDI1Mnww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "mountain range"
     }
   ]
 }
