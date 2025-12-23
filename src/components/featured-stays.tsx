@@ -13,8 +13,8 @@ export function FeaturedStays() {
         <MotionDiv
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.2 }}
-          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
         >
           <h2 className="font-headline text-center text-4xl md:text-5xl text-primary">Featured Stays</h2>
           <p className="mt-4 max-w-2xl mx-auto text-center text-lg text-muted-foreground">
@@ -25,10 +25,10 @@ export function FeaturedStays() {
           {featured.map((stay, index) => (
             <MotionDiv
               key={stay.id}
-              initial={{ opacity: 0, y: 50 }}
+              initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.2 }}
-              transition={{ duration: 0.6, delay: index * 0.1, ease: "easeOut" }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
             >
               <StayCard stay={stay} />
             </MotionDiv>

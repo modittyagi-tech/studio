@@ -11,8 +11,8 @@ export function CtaSection() {
                 <MotionDiv
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, amount: 0.5 }}
-                    transition={{ duration: 0.6 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.8, ease: "easeOut" }}
                     className="text-center text-primary-foreground"
                 >
                     <h2 className="font-headline text-4xl md:text-5xl">Your Adventure Awaits</h2>

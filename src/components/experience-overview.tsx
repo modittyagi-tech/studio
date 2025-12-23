@@ -12,10 +12,10 @@ export function ExperienceOverview() {
         <Section>
             <div className="grid md:grid-cols-2 gap-12 md:gap-24 items-center">
                 <MotionDiv
-                    initial={{ opacity: 0, x: -50 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true, amount: 0.3 }}
-                    transition={{ duration: 0.8 }}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.8, ease: "easeOut" }}
                 >
                     <h2 className="font-headline text-4xl md:text-5xl text-primary">More Than a Stay, It's an Experience</h2>
                     <div className="mt-6 space-y-6 text-lg text-muted-foreground/90 leading-relaxed">
@@ -33,10 +33,10 @@ export function ExperienceOverview() {
                     </div>
                 </MotionDiv>
                 <MotionDiv
-                    initial={{ opacity: 0, x: 50 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true, amount: 0.3 }}
-                    transition={{ duration: 0.8, delay: 0.1 }}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.8, ease: "easeOut" }}
                 >
                     {experienceImage && (
                         <div className="aspect-[4/3] rounded-xl overflow-hidden shadow-2xl shadow-primary/10">

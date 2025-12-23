@@ -33,8 +33,8 @@ export function LuxuryHighlights() {
         <MotionDiv
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.2 }}
-            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
         >
           <h2 className="font-headline text-center text-4xl md:text-5xl">Uncompromising Luxury</h2>
           <p className="mt-4 max-w-2xl mx-auto text-center text-lg text-muted-foreground/90">
@@ -48,10 +48,10 @@ export function LuxuryHighlights() {
               <MotionDiv
                 key={highlight.title}
                 className="text-center"
-                initial={{ opacity: 0, y: 50 }}
+                initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.3 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8, ease: "easeOut" }}
               >
                 <div className="relative w-full aspect-square rounded-xl overflow-hidden shadow-lg group mx-auto">
                   {image && (

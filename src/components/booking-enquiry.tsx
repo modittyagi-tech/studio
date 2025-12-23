@@ -62,8 +62,8 @@ export function BookingEnquiry() {
           <MotionDiv
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.2 }}
-            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
           >
             <h2 className="font-headline text-center text-4xl md:text-5xl">
               Start Your Journey
@@ -73,10 +73,10 @@ export function BookingEnquiry() {
             </p>
           </MotionDiv>
           <MotionDiv
-            initial={{ opacity: 0, y: 50 }}
+            initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.2 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
             className="mt-12"
           >
             <Form {...form}>

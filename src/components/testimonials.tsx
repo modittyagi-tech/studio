@@ -13,8 +13,8 @@ export function Testimonials() {
         <MotionDiv
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.2 }}
-          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
         >
           <h2 className="font-headline text-center text-4xl md:text-5xl">Words From Our Guests</h2>
           <p className="mt-4 max-w-2xl mx-auto text-center text-lg text-muted-foreground/90">
@@ -27,10 +27,10 @@ export function Testimonials() {
             return (
               <MotionDiv
                 key={testimonial.id}
-                initial={{ opacity: 0, y: 50 }}
+                initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.2 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8, ease: "easeOut" }}
               >
                 <div className="h-full bg-background/50 rounded-xl p-8 lg:p-12 flex flex-col justify-center border">
                     <div className="flex mb-4">
