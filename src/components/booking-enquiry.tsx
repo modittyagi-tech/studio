@@ -16,6 +16,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { MotionDiv } from "./motion";
+import Section from "./section";
 
 const bookingSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters."),
@@ -55,112 +56,114 @@ export function BookingEnquiry() {
   }
 
   return (
-    <section id="booking" className="py-16 md:py-24 bg-background">
-      <div className="container max-w-4xl">
-        <MotionDiv
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.2 }}
-          transition={{ duration: 0.6 }}
-        >
-          <h2 className="font-headline text-center text-4xl md:text-5xl text-primary">
-            Start Your Journey
-          </h2>
-          <p className="mt-4 max-w-2xl mx-auto text-center text-lg text-muted-foreground">
-            Have questions or ready to book? Fill out the form below and our team will be in touch.
-          </p>
-        </MotionDiv>
-        <MotionDiv
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.2 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className="mt-12"
-        >
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-              <div className="grid md:grid-cols-2 gap-8">
+    <div id="booking" className="bg-background">
+      <Section>
+        <div className="max-w-4xl mx-auto">
+          <MotionDiv
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.2 }}
+            transition={{ duration: 0.6 }}
+          >
+            <h2 className="font-headline text-center text-4xl md:text-5xl text-primary">
+              Start Your Journey
+            </h2>
+            <p className="mt-4 max-w-2xl mx-auto text-center text-lg text-muted-foreground">
+              Have questions or ready to book? Fill out the form below and our team will be in touch.
+            </p>
+          </MotionDiv>
+          <MotionDiv
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.2 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="mt-12"
+          >
+            <Form {...form}>
+              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                <div className="grid md:grid-cols-2 gap-8">
+                  <FormField
+                    control={form.control}
+                    name="name"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Full Name</FormLabel>
+                        <FormControl>
+                          <Input placeholder="John Doe" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="email"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Email Address</FormLabel>
+                        <FormControl>
+                          <Input placeholder="you@example.com" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                <div className="grid md:grid-cols-2 gap-8">
+                   <FormField
+                    control={form.control}
+                    name="dates"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Desired Dates</FormLabel>
+                        <FormControl>
+                          <Input placeholder="e.g., August 15-20" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                   <FormField
+                    control={form.control}
+                    name="guests"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Number of Guests</FormLabel>
+                        <FormControl>
+                          <Input placeholder="e.g., 2 adults" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
                 <FormField
                   control={form.control}
-                  name="name"
+                  name="message"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Full Name</FormLabel>
+                      <FormLabel>Your Message (Optional)</FormLabel>
                       <FormControl>
-                        <Input placeholder="John Doe" {...field} />
+                        <Textarea
+                          placeholder="Any special requests or questions?"
+                          className="min-h-[120px]"
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
-                <FormField
-                  control={form.control}
-                  name="email"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Email Address</FormLabel>
-                      <FormControl>
-                        <Input placeholder="you@example.com" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-              <div className="grid md:grid-cols-2 gap-8">
-                 <FormField
-                  control={form.control}
-                  name="dates"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Desired Dates</FormLabel>
-                      <FormControl>
-                        <Input placeholder="e.g., August 15-20" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                 <FormField
-                  control={form.control}
-                  name="guests"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Number of Guests</FormLabel>
-                      <FormControl>
-                        <Input placeholder="e.g., 2 adults" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-              <FormField
-                control={form.control}
-                name="message"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Your Message (Optional)</FormLabel>
-                    <FormControl>
-                      <Textarea
-                        placeholder="Any special requests or questions?"
-                        className="min-h-[120px]"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <div className="text-center">
-                <Button type="submit" size="lg" disabled={form.formState.isSubmitting}>
-                  {form.formState.isSubmitting ? "Sending..." : "Send Enquiry"}
-                </Button>
-              </div>
-            </form>
-          </Form>
-        </MotionDiv>
-      </div>
-    </section>
+                <div className="text-center">
+                  <Button type="submit" size="lg" disabled={form.formState.isSubmitting}>
+                    {form.formState.isSubmitting ? "Sending..." : "Send Enquiry"}
+                  </Button>
+                </div>
+              </form>
+            </Form>
+          </MotionDiv>
+        </div>
+      </Section>
+    </div>
   );
 }

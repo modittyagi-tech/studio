@@ -4,11 +4,12 @@ import Image from 'next/image';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { MotionDiv } from './motion';
 import { Star } from 'lucide-react';
+import Section from './section';
 
 export function Testimonials() {
   return (
-    <section className="py-24 md:py-40 bg-secondary/30">
-      <div className="container max-w-7xl">
+    <div className="bg-secondary/30">
+      <Section>
         <MotionDiv
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -61,7 +62,7 @@ export function Testimonials() {
             );
           })}
         </div>
-      </div>
-    </section>
+      </Section>
+    </div>
   );
 }

@@ -2,6 +2,7 @@
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import Image from 'next/image';
 import { MotionDiv } from './motion';
+import Section from './section';
 
 const highlights = [
   {
@@ -28,8 +29,7 @@ const highlights = [
 
 export function LuxuryHighlights() {
   return (
-    <section className="py-24 md:py-40 bg-background">
-      <div className="container max-w-7xl">
+    <Section>
         <MotionDiv
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -74,7 +74,6 @@ export function LuxuryHighlights() {
             );
           })}
         </div>
-      </div>
-    </section>
+    </Section>
   );
 }

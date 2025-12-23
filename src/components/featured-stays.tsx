@@ -2,13 +2,14 @@
 import { mockStays } from '@/lib/data';
 import { StayCard } from './stay-card';
 import { MotionDiv } from './motion';
+import Section from './section';
 
 export function FeaturedStays() {
   const featured = mockStays.filter(stay => stay.is_featured);
 
   return (
-    <section className="py-24 md:py-32 bg-secondary/30">
-      <div className="container max-w-7xl">
+    <div className="bg-secondary/30">
+      <Section>
         <MotionDiv
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -33,7 +34,7 @@ export function FeaturedStays() {
             </MotionDiv>
           ))}
         </div>
-      </div>
-    </section>
+      </Section>
+    </div>
   );
 }
