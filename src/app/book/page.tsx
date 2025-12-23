@@ -363,34 +363,28 @@ export default function BookPage() {
                                 <FormItem>
                                 <Popover open={isDatePickerOpen} onOpenChange={setIsDatePickerOpen}>
                                     <PopoverTrigger asChild>
+                                    <button
+                                        className={cn(
+                                            "w-full justify-start text-left font-normal",
+                                        )}
+                                    >
                                         <div className="grid grid-cols-2 gap-4">
-                                            <Button
-                                                variant={"outline"}
-                                                className={cn(
-                                                "w-full justify-start text-left font-normal h-16 text-base",
-                                                !field.value?.from && "text-muted-foreground"
-                                                )}
-                                            >
+                                            <div className={cn("flex items-center w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm h-16", !field.value?.from && "text-muted-foreground")}>
                                                 <CalendarIcon className="mr-3 h-5 w-5 text-primary/70" />
                                                 <div>
                                                     <p className="text-sm text-muted-foreground">Check-in</p>
-                                                    {field.value?.from ? format(field.value.from, "LLL dd, y") : "Add date"}
+                                                    <p className="text-base font-medium">{field.value?.from ? format(field.value.from, "LLL dd, y") : "Add date"}</p>
                                                 </div>
-                                            </Button>
-                                            <Button
-                                                variant={"outline"}
-                                                className={cn(
-                                                "w-full justify-start text-left font-normal h-16 text-base",
-                                                !field.value?.to && "text-muted-foreground"
-                                                )}
-                                            >
+                                            </div>
+                                            <div className={cn("flex items-center w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm h-16", !field.value?.to && "text-muted-foreground")}>
                                                 <CalendarIcon className="mr-3 h-5 w-5 text-primary/70" />
                                                 <div>
                                                     <p className="text-sm text-muted-foreground">Check-out</p>
-                                                    {field.value?.to ? format(field.value.to, "LLL dd, y") : "Add date"}
+                                                    <p className="text-base font-medium">{field.value?.to ? format(field.value.to, "LLL dd, y") : "Add date"}</p>
                                                 </div>
-                                            </Button>
+                                            </div>
                                         </div>
+                                    </button>
                                     </PopoverTrigger>
                                     <PopoverContent className="w-auto p-0" align="start">
                                     <Calendar
@@ -581,7 +575,5 @@ if (typeof window !== 'undefined') {
     styleSheet.innerText = styles;
     document.head.appendChild(styleSheet);
 }
-
-    
 
     
