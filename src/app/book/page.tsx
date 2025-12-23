@@ -226,7 +226,7 @@ export default function BookPage() {
                         </p>
                         
                         <div className="mt-8 text-left bg-card p-6 rounded-lg border">
-                            <div className="flex justify-between items-center">
+                            <div className="grid grid-cols-2 gap-4">
                                 <div>
                                     <p className="text-sm text-muted-foreground">Booking Reference</p>
                                     <p className="font-mono text-primary text-base font-bold">{finalBookingId}</p>
@@ -603,6 +603,3 @@ function GuestInputControl({ form, name, label, min }: { form: any, name: "adult
         </div>
     )
 }
-
-    
-    
