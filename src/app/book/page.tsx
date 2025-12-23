@@ -167,7 +167,7 @@ export default function BookPage() {
 
     setIsLoading(true);
     try {
-      const { data, error } = await supabase.from('bookings').insert([
+      const { data } = await supabase.from('bookings').insert([
         {
           stay_id: selectedStay.id,
           check_in: searchParams.dates.from.toISOString(),
@@ -181,9 +181,7 @@ export default function BookPage() {
           special_requests: values.special_requests ?? null,
           status: 'pending',
         },
-      ]).select('id').single();
-
-      if (error) throw error;
+      ]).select('id').single().throwOnError();
 
       setFinalBookingId(data.id);
       setStep("confirmation");
@@ -584,5 +582,7 @@ function GuestInputControl({ form, name, label, min }: { form: any, name: "adult
         </div>
     )
 }
+
+    
 
     
