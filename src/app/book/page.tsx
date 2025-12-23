@@ -7,7 +7,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { supabase } from "@/lib/supabase";
 import { Stay } from "@/lib/types";
-import { mockStays } from "@/lib/data";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -27,7 +26,6 @@ import { useToast } from "@/hooks/use-toast";
 import type { DateRange } from "react-day-picker";
 import { MotionDiv } from "@/components/motion";
 import Image from "next/image";
-import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { PageHeader } from "@/components/page-header";
 import { Textarea } from "@/components/ui/textarea";
 
@@ -104,7 +102,7 @@ export default function BookPage() {
     setStep("search"); 
 
     const { from: check_in, to: check_out } = values.dates;
-
+    
     if (!check_in || !check_out) {
         toast({
             variant: "destructive",
@@ -116,45 +114,20 @@ export default function BookPage() {
     }
     
     try {
-        const { data: stays, error: staysError } = await supabase
-            .from('stays')
-            .select('*');
+        const { data: stays, error } = await supabase.rpc('get_available_stays', {
+            check_in_date: check_in.toISOString(),
+            check_out_date: check_out.toISOString()
+        });
 
-        if (staysError) {
-            throw staysError;
-        }
-
-        const staysWithAvailability: AvailableStay[] = [];
-
-        for (const stay of stays) {
-            const { data: bookings, error: bookingsError } = await supabase
-                .from('bookings')
-                .select('rooms_booked')
-                .eq('stay_id', stay.id)
-                .neq('status', 'cancelled')
-                .lt('check_in', check_out.toISOString())
-                .gt('check_out', check_in.toISOString());
-
-            if (bookingsError) {
-                console.error(`Error fetching bookings for stay ${stay.id}:`, bookingsError);
-                continue; // Skip this stay if bookings can't be fetched
-            }
-
-            const bookedRooms = bookings.reduce((acc, booking) => acc + booking.rooms_booked, 0);
-            const available_rooms = stay.total_rooms - bookedRooms;
-            
-            const stayWithAllDetails = {
+        if (error) throw error;
+        
+        const staysWithAvailability: AvailableStay[] = stays
+          .filter((stay: any) => stay.available_rooms >= values.rooms && ((stay.max_adults + stay.max_children) * values.rooms) >= (values.adults + values.children))
+          .map((stay: any) => ({
                 ...stay,
-                available_rooms,
-              };
-            
-            if (available_rooms >= values.rooms) {
-                 const totalGuestsInSearch = values.adults + values.children;
-                 if (((stayWithAllDetails.max_adults + stayWithAllDetails.max_children) * values.rooms) >= totalGuestsInSearch) {
-                    staysWithAvailability.push(stayWithAllDetails);
-                 }
-            }
-        }
+                images: stay.images || [],
+                amenities: stay.amenities || []
+            }));
         
         setAvailableStays(staysWithAvailability);
         setStep("results");
@@ -176,6 +149,7 @@ export default function BookPage() {
   async function onBookStay(values: z.infer<typeof bookingSchema>) {
     if (!selectedStay || !searchParams) return;
 
+    setIsLoading(true);
     try {
       const { data, error } = await supabase.from('bookings').insert([
         {
@@ -205,6 +179,8 @@ export default function BookPage() {
         title: "Booking Failed",
         description: "There was a problem submitting your booking. Please try again.",
       });
+    } finally {
+        setIsLoading(false);
     }
   }
   
@@ -255,7 +231,7 @@ export default function BookPage() {
   }
 
   if (selectedStay && searchParams) {
-    const heroImage = PlaceHolderImages.find(i => i.id === (selectedStay.images?.[0])) || {imageUrl: `https://picsum.photos/seed/${selectedStay.id}/800/600`, imageHint: selectedStay.name, description: selectedStay.name};
+    const heroImage = {imageUrl: `https://picsum.photos/seed/${selectedStay.id}/800/600`, imageHint: selectedStay.name, description: selectedStay.name};
     const totalPrice = nights * selectedStay.price_per_night * searchParams.rooms;
     return (
         <div className="bg-background">
@@ -298,8 +274,8 @@ export default function BookPage() {
                                             </FormItem>
                                         )}/>
                                         <div className="pt-4">
-                                            <Button type="submit" size="lg" className="w-full" disabled={bookingForm.formState.isSubmitting}>
-                                                {bookingForm.formState.isSubmitting ? "Submitting..." : "Confirm Booking"}
+                                            <Button type="submit" size="lg" className="w-full" disabled={isLoading}>
+                                                {isLoading ? "Submitting..." : "Confirm Booking"}
                                             </Button>
                                         </div>
                                     </form>
@@ -452,8 +428,8 @@ export default function BookPage() {
       </section>
       
       { (isLoading || searchPerformed) && 
-        <div className="bg-secondary/30 min-h-[500px] py-16 md:py-24">
-            <div className="container max-w-6xl">
+        <div className="bg-secondary/30 min-h-[500px] py-16 md:py-24 flex items-center justify-center">
+            <div className="container max-w-6xl text-center">
                 {isLoading && (
                     <div className="flex flex-col items-center text-center text-muted-foreground">
                         <div className="loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-12 w-12 mb-4"></div>
@@ -463,7 +439,7 @@ export default function BookPage() {
                 )}
                 
                 {!isLoading && searchPerformed && availableStays.length === 0 && (
-                    <MotionDiv initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center">
+                    <MotionDiv initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
                          <div className="flex justify-center items-center flex-col gap-4 text-center">
                             <AlertCircle className="w-16 h-16 text-primary/30" />
                             <h3 className="font-headline text-3xl text-primary">No Stays Available</h3>
@@ -485,7 +461,7 @@ export default function BookPage() {
                         </MotionDiv>
                         <div className="grid md:grid-cols-1 gap-8">
                             {availableStays.map((stay, index) => {
-                                 const image = PlaceHolderImages.find(img => img.id === stay.images?.[0]) || {imageUrl: `https://picsum.photos/seed/${stay.id}/800/600`, imageHint: stay.name, description: stay.name};
+                                 const image = {imageUrl: `https://picsum.photos/seed/${stay.id}/800/600`, imageHint: stay.name, description: stay.name};
                                  const totalPrice = nights * stay.price_per_night * searchParams!.rooms;
                                 return (
                                 <MotionDiv key={stay.id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.1 }}>
