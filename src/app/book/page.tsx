@@ -29,7 +29,6 @@ import Image from "next/image";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { PageHeader } from "@/components/page-header";
 import { Textarea } from "@/components/ui/textarea";
-import { mockStays } from "@/lib/data";
 
 // Schema for the main availability search form
 const availabilitySchema = z.object({
@@ -78,8 +77,8 @@ export default function BookPage() {
       children: 0,
       rooms: 1,
       dates: {
-        from: addDays(new Date(), 1),
-        to: addDays(new Date(), 5),
+        from: undefined,
+        to: undefined,
       }
     },
   });
@@ -101,7 +100,7 @@ export default function BookPage() {
     setSearchPerformed(true);
     setAvailableStays([]);
     setSearchParams(values);
-    setStep("search"); // Stay on search step but show loader
+    setStep("search"); 
 
     const { from: check_in, to: check_out } = values.dates;
 
@@ -114,48 +113,59 @@ export default function BookPage() {
         setIsLoading(false);
         return;
     }
-
+    
     try {
-      const { data, error } = await supabase.rpc('get_available_stays', {
-        p_check_in: check_in.toISOString().split('T')[0],
-        p_check_out: check_out.toISOString().split('T')[0],
-      });
+        const { data: stays, error: staysError } = await supabase
+            .from('stays')
+            .select('*');
 
-      if (error) throw error;
-      
-      const staysWithAvailability = (data as any[])
-        .map(stayFromDb => {
-            const mockStayData = mockStays.find(ms => ms.id === stayFromDb.id);
-            if (!mockStayData) return null;
-            
-            const available_rooms = stayFromDb.total_rooms - (stayFromDb.booked_rooms || 0);
-            
-            return {
-                ...mockStayData,
-                id: stayFromDb.id, // ensure we use the id from db
-                total_rooms: stayFromDb.total_rooms, // and total_rooms
-                available_rooms,
-            };
-        })
-        .filter((stay): stay is AvailableStay => {
-            if (!stay) return false;
-            const totalGuests = values.adults + values.children;
+        if (staysError) {
+            throw staysError;
+        }
 
-            return stay.available_rooms >= values.rooms && ((stay.max_adults + stay.max_children) * values.rooms) >= totalGuests;
-        });
+        const staysWithAvailability: AvailableStay[] = [];
 
-      setAvailableStays(staysWithAvailability);
-      setStep("results");
+        for (const stay of stays) {
+            const { data: bookings, error: bookingsError } = await supabase
+                .from('bookings')
+                .select('rooms_booked')
+                .eq('stay_id', stay.id)
+                .neq('status', 'cancelled')
+                .lt('check_in', check_out.toISOString())
+                .gt('check_out', check_in.toISOString());
+
+            if (bookingsError) {
+                console.error(`Error fetching bookings for stay ${stay.id}:`, bookingsError);
+                continue; // Skip this stay if bookings can't be fetched
+            }
+
+            const bookedRooms = bookings.reduce((acc, booking) => acc + booking.rooms_booked, 0);
+            const available_rooms = stay.total_rooms - bookedRooms;
+
+            if (available_rooms >= values.rooms) {
+                 const totalGuestsInSearch = values.adults + values.children;
+                 if (((stay.max_adults + stay.max_children) * values.rooms) >= totalGuestsInSearch) {
+                    staysWithAvailability.push({
+                        ...stay,
+                        available_rooms,
+                    });
+                 }
+            }
+        }
+        
+        setAvailableStays(staysWithAvailability);
+        setStep("results");
 
     } catch (error: any) {
-      toast({
-        variant: "destructive",
-        title: "Search Failed",
-        description: error.message || "Could not fetch available stays. Please try again.",
-      });
-      setStep("search"); // Revert to search step on error
+        console.error("Error fetching availability:", error);
+        toast({
+            variant: "destructive",
+            title: "Search Failed",
+            description: "Could not fetch available stays. Please try again later.",
+        });
+        setStep("search"); 
     } finally {
-      setIsLoading(false);
+        setIsLoading(false);
     }
   }
   
@@ -427,7 +437,7 @@ export default function BookPage() {
                         </div>
                         
                         <div className="md:col-span-2">
-                            <Button type="submit" size="lg" disabled={isLoading} className="w-full h-16 text-lg bg-primary text-primary-foreground hover:bg-primary/90">
+                            <Button type="submit" size="lg" disabled={isLoading || !availabilityForm.formState.isValid} className="w-full h-16 text-lg bg-primary text-primary-foreground hover:bg-primary/90">
                             {isLoading ? "Searching..." : "Check Availability"}
                             </Button>
                         </div>
@@ -518,7 +528,7 @@ function GuestInputControl({ form, name, label, min }: { form: any, name: "adult
         <div className="flex items-center justify-between">
             <FormLabel className="font-normal">{label}</FormLabel>
             <div className="flex items-center gap-2">
-                <Button type="button" variant="outline" size="icon" className="h-8 w-8" onClick={() => form.setValue(name, Math.max(min, value - 1))}>
+                <Button type="button" variant="outline" size="icon" className="h-8 w-8" onClick={() => form.setValue(name, Math.max(min, value - 1), { shouldValidate: true })} >
                     <Minus className="h-4 w-4" />
                 </Button>
                 <Controller
@@ -534,7 +544,7 @@ function GuestInputControl({ form, name, label, min }: { form: any, name: "adult
                         />
                     )}
                 />
-                <Button type="button" variant="outline" size="icon" className="h-8 w-8" onClick={() => form.setValue(name, value + 1)}>
+                <Button type="button" variant="outline" size="icon" className="h-8 w-8" onClick={() => form.setValue(name, value + 1, { shouldValidate: true })}>
                     <Plus className="h-4 w-4" />
                 </Button>
             </div>
@@ -566,3 +576,6 @@ if (typeof window !== 'undefined') {
     styleSheet.innerText = styles;
     document.head.appendChild(styleSheet);
 }
+
+
+    
