@@ -135,7 +135,7 @@ export default function BookPage() {
         .map(stay => ({ ...stay, available_rooms: stay.total_rooms - (stay.booked_rooms || 0) }))
         .filter(stay => 
             (stay.available_rooms >= values.rooms) &&
-            (stay.max_guests_per_room * values.rooms) >= (values.adults + values.children)
+            ((stay.max_adults + stay.max_children) * values.rooms) >= (values.adults + values.children)
         );
 
       setAvailableStays(staysWithAvailability);
@@ -497,7 +497,7 @@ export default function BookPage() {
                                              <h3 className="font-headline text-3xl text-primary">{stay.name}</h3>
                                              <p className="mt-2 text-muted-foreground flex-grow">{stay.short_description}</p>
                                             <div className="mt-4 flex items-center space-x-6 text-sm text-muted-foreground">
-                                                <div className="flex items-center"><Users className="h-4 w-4 mr-2 text-primary/70" /><span>Up to {stay.max_guests_per_room} guests per room</span></div>
+                                                <div className="flex items-center"><Users className="h-4 w-4 mr-2 text-primary/70" /><span>Up to {stay.max_adults + stay.max_children} guests per room</span></div>
                                                 <div className="flex items-center"><Bed className="h-4 w-4 mr-2 text-primary/70" /><span>{stay.available_rooms} rooms available</span></div>
                                             </div>
                                             <div className="mt-6 pt-6 border-t flex flex-col md:flex-row md:justify-between md:items-end">
@@ -581,5 +581,6 @@ if (typeof window !== 'undefined') {
     document.head.appendChild(styleSheet);
 }
 
+    
     
     
