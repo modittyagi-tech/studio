@@ -17,7 +17,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { StayCard } from "@/components/stay-card";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { CalendarIcon, Minus, Plus, Users, Bed, ArrowRight } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
@@ -74,6 +73,15 @@ export default function BookPage() {
       adults: 2,
       children: 0,
     },
+  });
+
+  const bookingForm = useForm<z.infer<typeof bookingSchema>>({
+    resolver: zodResolver(bookingSchema),
+    defaultValues: {
+        name: "",
+        email: "",
+        phone: ""
+    }
   });
 
   const [hasMounted, setHasMounted] = useState(false);
