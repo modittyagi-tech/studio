@@ -100,17 +100,3 @@
     @apply bg-background text-foreground;
   }
 }
-
-/* For aspect ratio plugin in Tailwind */
-@layer components {
-    .aspect-w-1 { @apply aspect-w-1; }
-    .aspect-w-2 { @apply aspect-w-2; }
-    .aspect-w-3 { @apply aspect-w-3; }
-    .aspect-w-4 { @apply aspect-w-4; }
-    .aspect-w-16 { @apply aspect-w-16; }
-    .aspect-h-1 { @apply aspect-h-1; }
-    .aspect-h-2 { @apply aspect-h-2; }
-    .aspect-h-3 { @apply aspect-h-3; }
-    .aspect-h-4 { @apply aspect-h-4; }
-    .aspect-h-9 { @apply aspect-h-9; }
-}
