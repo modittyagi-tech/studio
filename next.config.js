@@ -34,7 +34,7 @@ const nextConfig = {
     return [
       {
         source: '/admin',
-        destination: '/admin/image-harmonizer',
+        destination: '/admin/dashboard',
         permanent: true,
       },
     ];

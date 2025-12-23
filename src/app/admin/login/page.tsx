@@ -9,8 +9,18 @@ export default async function LoginPage() {
     data: { session },
   } = await supabase.auth.getSession()
 
+  // If the user is already logged in and they land on the login page,
+  // send them to the dashboard. This is a good user experience.
   if (session) {
-    return redirect('/admin/dashboard')
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('role')
+      .eq('id', session.user.id)
+      .single()
+
+    if (profile?.role === 'admin') {
+      return redirect('/admin/dashboard')
+    }
   }
 
   return (

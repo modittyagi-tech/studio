@@ -48,8 +48,9 @@ export function LoginForm() {
     if (error) {
       setError(error.message);
     } else {
-      router.push('/admin/dashboard');
-      router.refresh();
+      // On successful login, redirect to the dashboard.
+      // Use router.replace to avoid adding the login page to the browser history.
+      router.replace('/admin/dashboard');
     }
   }
 
