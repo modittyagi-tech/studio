@@ -70,8 +70,6 @@ export default function BookPage() {
   const [searchParams, setSearchParams] = useState<SearchParams | null>(null);
   const [finalBookingId, setFinalBookingId] = useState<string | null>(null);
   const { toast } = useToast();
-
-  const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
   
   const availabilityForm = useForm<SearchParams>({
     resolver: zodResolver(availabilitySchema),
@@ -141,11 +139,9 @@ export default function BookPage() {
         })
         .filter((stay): stay is AvailableStay => {
             if (!stay) return false;
-            // Filter based on rooms required and guest capacity
-            const totalCapacity = (stay.max_adults + stay.max_children) * values.rooms;
             const totalGuests = values.adults + values.children;
 
-            return stay.available_rooms >= values.rooms && totalCapacity >= totalGuests;
+            return stay.available_rooms >= values.rooms && ((stay.max_adults + stay.max_children) * values.rooms) >= totalGuests;
         });
 
       setAvailableStays(staysWithAvailability);
@@ -361,48 +357,43 @@ export default function BookPage() {
                             name="dates"
                             render={({ field }) => (
                                 <FormItem>
-                                <Popover open={isDatePickerOpen} onOpenChange={setIsDatePickerOpen}>
-                                    <PopoverTrigger asChild>
-                                    <button
-                                        className={cn(
-                                            "w-full justify-start text-left font-normal",
-                                        )}
-                                    >
-                                        <div className="grid grid-cols-2 gap-4">
-                                            <div className={cn("flex items-center w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm h-16", !field.value?.from && "text-muted-foreground")}>
-                                                <CalendarIcon className="mr-3 h-5 w-5 text-primary/70" />
-                                                <div>
-                                                    <p className="text-sm text-muted-foreground">Check-in</p>
-                                                    <p className="text-base font-medium">{field.value?.from ? format(field.value.from, "LLL dd, y") : "Add date"}</p>
+                                    <Popover>
+                                        <PopoverTrigger asChild>
+                                        <button
+                                            className={cn(
+                                                "w-full justify-start text-left font-normal",
+                                            )}
+                                        >
+                                            <div className="grid grid-cols-2 gap-4">
+                                                <div className={cn("flex items-center w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm h-16", !field.value?.from && "text-muted-foreground")}>
+                                                    <CalendarIcon className="mr-3 h-5 w-5 text-primary/70" />
+                                                    <div>
+                                                        <p className="text-sm text-muted-foreground">Check-in</p>
+                                                        <p className="text-base font-medium">{field.value?.from ? format(field.value.from, "LLL dd, y") : "Add date"}</p>
+                                                    </div>
+                                                </div>
+                                                <div className={cn("flex items-center w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm h-16", !field.value?.to && "text-muted-foreground")}>
+                                                    <CalendarIcon className="mr-3 h-5 w-5 text-primary/70" />
+                                                    <div>
+                                                        <p className="text-sm text-muted-foreground">Check-out</p>
+                                                        <p className="text-base font-medium">{field.value?.to ? format(field.value.to, "LLL dd, y") : "Add date"}</p>
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div className={cn("flex items-center w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm h-16", !field.value?.to && "text-muted-foreground")}>
-                                                <CalendarIcon className="mr-3 h-5 w-5 text-primary/70" />
-                                                <div>
-                                                    <p className="text-sm text-muted-foreground">Check-out</p>
-                                                    <p className="text-base font-medium">{field.value?.to ? format(field.value.to, "LLL dd, y") : "Add date"}</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </button>
-                                    </PopoverTrigger>
-                                    <PopoverContent className="w-auto p-0" align="start">
-                                    <Calendar
-                                        initialFocus
-                                        mode="range"
-                                        defaultMonth={field.value?.from}
-                                        selected={field.value}
-                                        onSelect={(range) => {
-                                            field.onChange(range);
-                                            if (range?.from && range?.to) {
-                                                setIsDatePickerOpen(false);
-                                            }
-                                        }}
-                                        numberOfMonths={2}
-                                        disabled={(date) => date < new Date(new Date().setHours(0,0,0,0))}
-                                    />
-                                    </PopoverContent>
-                                </Popover>
+                                        </button>
+                                        </PopoverTrigger>
+                                        <PopoverContent className="w-auto p-0" align="start">
+                                        <Calendar
+                                            initialFocus
+                                            mode="range"
+                                            defaultMonth={field.value?.from}
+                                            selected={field.value}
+                                            onSelect={field.onChange}
+                                            numberOfMonths={2}
+                                            disabled={(date) => date < new Date(new Date().setHours(0,0,0,0))}
+                                        />
+                                        </PopoverContent>
+                                    </Popover>
                                 <FormMessage className="pl-2 pt-1" />
                                 </FormItem>
                             )}
