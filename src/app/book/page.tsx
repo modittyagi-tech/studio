@@ -484,7 +484,7 @@ export default function BookPage() {
         </Section>
       )}
       
-      { (isLoading || searchPerformed) && 
+      {searchPerformed && 
         <div className="bg-secondary/30 min-h-[500px] py-16 md:py-24 flex items-center justify-center">
             <div className="container max-w-6xl text-center">
                 {isLoading && (
@@ -495,7 +495,7 @@ export default function BookPage() {
                     </div>
                 )}
                 
-                {!isLoading && searchPerformed && availableStays.length === 0 && (
+                {!isLoading && availableStays.length === 0 && (
                     <MotionDiv initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
                          <div className="flex justify-center items-center flex-col gap-4 text-center">
                             <AlertCircle className="w-16 h-16 text-primary/30" />
