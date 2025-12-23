@@ -1,0 +1,39 @@
+"use client";
+import { mockStays } from '@/lib/data';
+import { StayCard } from './stay-card';
+import { MotionDiv } from './motion';
+
+export function FeaturedStays() {
+  const featured = mockStays.filter(stay => stay.is_featured);
+
+  return (
+    <section className="py-16 md:py-24 bg-secondary/20">
+      <div className="container max-w-7xl">
+        <MotionDiv
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.2 }}
+          transition={{ duration: 0.6 }}
+        >
+          <h2 className="font-headline text-center text-4xl md:text-5xl">Featured Stays</h2>
+          <p className="mt-4 max-w-2xl mx-auto text-center text-lg text-muted-foreground">
+            Hand-picked accommodations that offer a unique and luxurious experience.
+          </p>
+        </MotionDiv>
+        <div className="mt-12 grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {featured.map((stay, index) => (
+            <MotionDiv
+              key={stay.id}
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.3 }}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
+            >
+              <StayCard stay={stay} />
+            </MotionDiv>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}

@@ -1,3 +1,64 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "hero-1",
+      "description": "A stunning view of a glamping tent under the stars.",
+      "imageUrl": "https://images.unsplash.com/photo-1495567357861-a3597539c9c6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxnbGFtcGluZyUyMG5pZ2h0fGVufDB8fHx8MTc2NjM2OTMyNnww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "glamping night"
+    },
+    {
+      "id": "experience-1",
+      "description": "A couple enjoying a campfire outside their glamping tent.",
+      "imageUrl": "https://images.unsplash.com/photo-1708876168979-e3f7077831a9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8Y291cGxlJTIwY2FtcGZpcmV8ZW58MHx8fHwxNzY2NDc2NDQ3fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "couple campfire"
+    },
+    {
+      "id": "stay-1",
+      "description": "Interior of the 'Forest Dream' glamping tent.",
+      "imageUrl": "https://images.unsplash.com/photo-1762255121620-3ca4c551404c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHx0ZW50JTIwaW50ZXJpb3J8ZW58MHx8fHwxNzY2NDc2NDQ3fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "tent interior"
+    },
+    {
+      "id": "stay-2",
+      "description": "The 'Star Gazer' dome with a view of the night sky.",
+      "imageUrl": "https://images.unsplash.com/photo-1765739099942-749a729e5a83?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxnZW9kZXNpYyUyMGRvbWV8ZW58MHx8fHwxNzY2NDc2NDQ3fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "geodesic dome"
+    },
+    {
+      "id": "stay-3",
+      "description": "The 'River Whisper' cabin by a serene river.",
+      "imageUrl": "https://images.unsplash.com/photo-1686241610492-056d93935fc1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8Y2FiaW4lMjByaXZlcnxlbnwwfHx8fDE3NjY0NzY0NDd8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "cabin river"
+    },
+    {
+      "id": "highlight-1",
+      "description": "A private outdoor jacuzzi surrounded by nature.",
+      "imageUrl": "https://images.unsplash.com/photo-1714741324312-73bb4b1391d3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxvdXRkb29yJTIwamFjdXp6aXxlbnwwfHx8fDE3NjY0NzY0NDd8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "outdoor jacuzzi"
+    },
+    {
+      "id": "highlight-2",
+      "description": "Breathtaking mountain views from a glamping site.",
+      "imageUrl": "https://images.unsplash.com/photo-1615809265087-1416ccddd6ab?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxtb3VudGFpbiUyMHZpZXd8ZW58MHx8fHwxNzY2MzczMzE3fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "mountain view"
+    },
+    {
+      "id": "highlight-3",
+      "description": "A gourmet meal served at the glamping site.",
+      "imageUrl": "https://images.unsplash.com/photo-1596189181426-7f63a1737f0d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxnb3VybWV0JTIwZm9vZHxlbnwwfHx8fDE3NjY0MjQwMDF8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "gourmet food"
+    },
+    {
+      "id": "testimonial-1",
+      "description": "Portrait of a happy guest.",
+      "imageUrl": "https://images.unsplash.com/photo-1535295972055-1c762f4483e5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxoYXBweSUyMHBlcnNvbnxlbnwwfHx8fDE3NjY0NDUwNzd8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "happy person"
+    },
+    {
+      "id": "testimonial-2",
+      "description": "Portrait of another happy guest.",
+      "imageUrl": "https://images.unsplash.com/photo-1527980965255-d3b416303d12?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxzbWlsaW5nJTIwcGVyc29ufGVufDB8fHx8MTc2NjM4NTIyOHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "smiling person"
+    }
+  ]
 }
