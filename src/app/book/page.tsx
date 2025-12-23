@@ -7,6 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { supabase } from "@/lib/supabase";
 import { Stay } from "@/lib/types";
+import { mockStays } from "@/lib/data";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -18,7 +19,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { CalendarIcon, Minus, Plus, Users, Bed } from "lucide-react";
+import { CalendarIcon, Minus, Plus, Users, Bed, AlertCircle, Search } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import { addDays, format, isAfter, differenceInDays } from "date-fns";
 import { cn } from "@/lib/utils";
@@ -141,14 +142,16 @@ export default function BookPage() {
 
             const bookedRooms = bookings.reduce((acc, booking) => acc + booking.rooms_booked, 0);
             const available_rooms = stay.total_rooms - bookedRooms;
+            
+            const matchingMockStay = mockStays.find(ms => ms.id === stay.id);
+            if (!matchingMockStay) continue;
 
+            const stayWithAllDetails = { ...stay, ...matchingMockStay, available_rooms };
+            
             if (available_rooms >= values.rooms) {
                  const totalGuestsInSearch = values.adults + values.children;
-                 if (((stay.max_adults + stay.max_children) * values.rooms) >= totalGuestsInSearch) {
-                    staysWithAvailability.push({
-                        ...stay,
-                        available_rooms,
-                    });
+                 if (((stayWithAllDetails.max_adults + stayWithAllDetails.max_children) * values.rooms) >= totalGuestsInSearch) {
+                    staysWithAvailability.push(stayWithAllDetails);
                  }
             }
         }
@@ -461,9 +464,14 @@ export default function BookPage() {
                 
                 {!isLoading && searchPerformed && availableStays.length === 0 && (
                     <MotionDiv initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center">
-                        <h3 className="font-headline text-3xl text-primary">No Stays Available</h3>
-                        <p className="text-muted-foreground mt-2 max-w-md mx-auto">Unfortunately, no stays match your criteria for the selected dates or guest count. Please try different dates or a smaller group.</p>
-                        <Button variant="outline" className="mt-6" onClick={() => setSearchPerformed(false)}>Modify Search</Button>
+                         <div className="flex justify-center items-center flex-col gap-4 text-center">
+                            <AlertCircle className="w-16 h-16 text-primary/30" />
+                            <h3 className="font-headline text-3xl text-primary">No Stays Available</h3>
+                            <p className="text-muted-foreground mt-2 max-w-md mx-auto">Unfortunately, no stays match your criteria for the selected dates or guest count. Please try different dates or a smaller group.</p>
+                            <Button variant="outline" className="mt-6" onClick={handleModifySearch}>
+                                Modify Search
+                            </Button>
+                        </div>
                     </MotionDiv>
                 )}
                 
@@ -477,7 +485,7 @@ export default function BookPage() {
                         </MotionDiv>
                         <div className="grid md:grid-cols-1 gap-8">
                             {availableStays.map((stay, index) => {
-                                 const image = PlaceHolderImages.find(img => img.id === (stay.images?.[0])) || {imageUrl: `https://picsum.photos/seed/${stay.id}/800/600`, imageHint: stay.name, description: stay.name};
+                                 const image = PlaceHolderImages.find(img => img.id === stay.images[0]) || {imageUrl: `https://picsum.photos/seed/${stay.id}/800/600`, imageHint: stay.name, description: stay.name};
                                  const totalPrice = nights * stay.price_per_night * searchParams!.rooms;
                                 return (
                                 <MotionDiv key={stay.id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.1 }}>
@@ -576,6 +584,3 @@ if (typeof window !== 'undefined') {
     styleSheet.innerText = styles;
     document.head.appendChild(styleSheet);
 }
-
-
-    
