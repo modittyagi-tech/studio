@@ -53,14 +53,22 @@ export default function ExperiencePage() {
                                 >
                                     {image && (
                                         <div className="aspect-[4/3] rounded-xl overflow-hidden shadow-lg">
-                                            <Image
-                                                src={image.imageUrl}
-                                                alt={exp.title}
-                                                width={800}
-                                                height={600}
-                                                className="object-cover w-full h-full"
-                                                data-ai-hint={image.imageHint}
-                                            />
+                                            <MotionDiv
+                                                initial={{ scale: 1.05, opacity: 0 }}
+                                                whileInView={{ scale: 1, opacity: 1 }}
+                                                transition={{ duration: 0.8, ease: "easeOut" }}
+                                                viewport={{ once: true }}
+                                                className="w-full h-full"
+                                            >
+                                                <Image
+                                                    src={image.imageUrl}
+                                                    alt={exp.title}
+                                                    width={800}
+                                                    height={600}
+                                                    className="object-cover w-full h-full"
+                                                    data-ai-hint={image.imageHint}
+                                                />
+                                            </MotionDiv>
                                         </div>
                                     )}
                                 </MotionDiv>

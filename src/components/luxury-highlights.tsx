@@ -55,14 +55,22 @@ export function LuxuryHighlights() {
               >
                 <div className="relative w-full aspect-square rounded-xl overflow-hidden shadow-lg group mx-auto">
                   {image && (
-                      <Image 
-                        src={image.imageUrl}
-                        alt={highlight.title}
-                        fill
-                        className="object-cover transition-transform duration-500 ease-in-out group-hover:scale-105"
-                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                        data-ai-hint={image.imageHint}
-                      />
+                      <MotionDiv
+                        initial={{ scale: 1.05, opacity: 0 }}
+                        whileInView={{ scale: 1, opacity: 1 }}
+                        transition={{ duration: 0.8, ease: "easeOut" }}
+                        viewport={{ once: true }}
+                        className="w-full h-full"
+                      >
+                        <Image 
+                          src={image.imageUrl}
+                          alt={highlight.title}
+                          fill
+                          className="object-cover transition-transform duration-500 ease-in-out group-hover:scale-105"
+                          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                          data-ai-hint={image.imageHint}
+                        />
+                      </MotionDiv>
                   )}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
                   <div className="absolute inset-0 flex items-end p-6">
