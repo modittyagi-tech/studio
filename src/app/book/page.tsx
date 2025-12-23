@@ -186,7 +186,7 @@ export default function BookPage() {
           guest_name: values.guest_name,
           guest_email: values.guest_email,
           guest_phone: values.guest_phone,
-          special_requests: values.special_requests,
+          special_requests: values.special_requests ?? null,
           status: 'pending',
         },
       ]).select('id').single();
@@ -454,109 +454,109 @@ export default function BookPage() {
         </div>
       </section>
 
-      {!searchPerformed && (
-        <Section className="py-24 bg-background">
-            <div className="text-center">
-                <h2 className="font-headline text-3xl md:text-4xl text-primary">Your Journey to Tranquility</h2>
-                <p className="mt-4 max-w-2xl mx-auto text-lg text-muted-foreground">
-                    Booking your luxury escape is simple and secure.
-                </p>
-            </div>
-            <div className="mt-16 max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12 text-center">
-                {bookingSteps.map((step, index) => (
-                    <MotionDiv
-                        key={index}
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.5, delay: index * 0.1 }}
-                    >
-                        <div className="flex justify-center mb-4">
-                            <div className="bg-primary/10 rounded-full p-4 border-2 border-primary/20">
-                                <step.icon className="w-8 h-8 text-primary" />
+      <div className="bg-background">
+          {searchPerformed ? (
+            <div className="bg-secondary/30 min-h-[500px] py-16 md:py-24 flex items-center justify-center">
+                <div className="container max-w-6xl text-center">
+                    {isLoading && (
+                        <div className="flex flex-col items-center text-center text-muted-foreground">
+                            <div className="loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-12 w-12 mb-4"></div>
+                            <h3 className="font-headline text-2xl text-primary">Searching for your perfect stay...</h3>
+                            <p>Please wait while we check our availability.</p>
+                        </div>
+                    )}
+                    
+                    {!isLoading && availableStays.length === 0 && (
+                        <MotionDiv initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+                             <div className="flex justify-center items-center flex-col gap-4 text-center">
+                                <AlertCircle className="w-16 h-16 text-primary/30" />
+                                <h3 className="font-headline text-3xl text-primary">No Stays Available</h3>
+                                <p className="text-muted-foreground mt-2 max-w-md mx-auto">Unfortunately, no stays match your criteria for the selected dates or guest count. Please try different dates or a smaller group.</p>
+                                <Button variant="outline" className="mt-6" onClick={handleModifySearch}>
+                                    Modify Search
+                                </Button>
+                            </div>
+                        </MotionDiv>
+                    )}
+                    
+                    {step === 'results' && !isLoading && availableStays.length > 0 && (
+                         <div className="space-y-12">
+                            <MotionDiv initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+                                <h2 className="font-headline text-center text-4xl md:text-5xl text-primary">Available Stays</h2>
+                                <p className="mt-2 text-center text-muted-foreground">
+                                    {searchParams?.dates.from && format(searchParams.dates.from, 'PPP')} - {searchParams?.dates.to && format(searchParams.dates.to, 'PPP')} ({nights} nights)
+                                </p>
+                            </MotionDiv>
+                            <div className="grid md:grid-cols-1 gap-8">
+                                {availableStays.map((stay, index) => {
+                                     const image = {imageUrl: `https://picsum.photos/seed/${stay.id}/800/600`, imageHint: stay.name, description: stay.name};
+                                     const totalPrice = nights * stay.price_per_night * searchParams!.rooms;
+                                    return (
+                                    <MotionDiv key={stay.id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.1 }}>
+                                        <div className="bg-card rounded-2xl border shadow-md overflow-hidden grid md:grid-cols-12 gap-0">
+                                            <div className="md:col-span-5 relative">
+                                                <Image
+                                                    src={image.imageUrl} alt={stay.name} width={800} height={600}
+                                                    className="object-cover w-full h-64 md:h-full"
+                                                    data-ai-hint={image.imageHint}
+                                                />
+                                            </div>
+                                            <div className="md:col-span-7 p-6 md:p-8 flex flex-col">
+                                                 <h3 className="font-headline text-3xl text-primary">{stay.name}</h3>
+                                                 <p className="mt-2 text-muted-foreground flex-grow">{stay.short_description}</p>
+                                                <div className="mt-4 flex items-center space-x-6 text-sm text-muted-foreground">
+                                                    <div className="flex items-center"><Users className="h-4 w-4 mr-2 text-primary/70" /><span>Up to {stay.max_adults + stay.max_children} guests per room</span></div>
+                                                    <div className="flex items-center"><Bed className="h-4 w-4 mr-2 text-primary/70" /><span>{stay.available_rooms} rooms available</span></div>
+                                                </div>
+                                                <div className="mt-6 pt-6 border-t flex flex-col md:flex-row md:justify-between md:items-end">
+                                                    <div>
+                                                         <p className="text-2xl font-bold text-foreground">${totalPrice.toLocaleString()}</p>
+                                                         <p className="text-sm font-normal text-muted-foreground">${stay.price_per_night}/night ({nights} nights, {searchParams?.rooms} rooms)</p>
+                                                    </div>
+                                                    <Button size="lg" className="w-full md:w-auto mt-4 md:mt-0" onClick={() => handleSelectStay(stay)}>Select Stay</Button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </MotionDiv>
+                                )})}
+                            </div>
+                            <div className="text-center">
+                                <Button variant="outline" onClick={handleModifySearch}>Modify Search</Button>
                             </div>
                         </div>
-                        <h3 className="font-headline text-2xl">{step.title}</h3>
-                        <p className="mt-2 text-muted-foreground/90">{step.description}</p>
-                    </MotionDiv>
-                ))}
+                    )}
+                </div>
             </div>
-        </Section>
-      )}
-      
-      {searchPerformed && 
-        <div className="bg-secondary/30 min-h-[500px] py-16 md:py-24 flex items-center justify-center">
-            <div className="container max-w-6xl text-center">
-                {isLoading && (
-                    <div className="flex flex-col items-center text-center text-muted-foreground">
-                        <div className="loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-12 w-12 mb-4"></div>
-                        <h3 className="font-headline text-2xl text-primary">Searching for your perfect stay...</h3>
-                        <p>Please wait while we check our availability.</p>
-                    </div>
-                )}
-                
-                {!isLoading && availableStays.length === 0 && (
-                    <MotionDiv initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-                         <div className="flex justify-center items-center flex-col gap-4 text-center">
-                            <AlertCircle className="w-16 h-16 text-primary/30" />
-                            <h3 className="font-headline text-3xl text-primary">No Stays Available</h3>
-                            <p className="text-muted-foreground mt-2 max-w-md mx-auto">Unfortunately, no stays match your criteria for the selected dates or guest count. Please try different dates or a smaller group.</p>
-                            <Button variant="outline" className="mt-6" onClick={handleModifySearch}>
-                                Modify Search
-                            </Button>
-                        </div>
-                    </MotionDiv>
-                )}
-                
-                {step === 'results' && !isLoading && availableStays.length > 0 && (
-                     <div className="space-y-12">
-                        <MotionDiv initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-                            <h2 className="font-headline text-center text-4xl md:text-5xl text-primary">Available Stays</h2>
-                            <p className="mt-2 text-center text-muted-foreground">
-                                {searchParams?.dates.from && format(searchParams.dates.from, 'PPP')} - {searchParams?.dates.to && format(searchParams.dates.to, 'PPP')} ({nights} nights)
-                            </p>
+          ) : (
+            <Section className="py-24">
+                <div className="text-center">
+                    <h2 className="font-headline text-3xl md:text-4xl text-primary">Your Journey to Tranquility</h2>
+                    <p className="mt-4 max-w-2xl mx-auto text-lg text-muted-foreground">
+                        Booking your luxury escape is simple and secure.
+                    </p>
+                </div>
+                <div className="mt-16 max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12 text-center">
+                    {bookingSteps.map((step, index) => (
+                        <MotionDiv
+                            key={index}
+                            initial={{ opacity: 0, y: 20 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.5, delay: index * 0.1 }}
+                        >
+                            <div className="flex justify-center mb-4">
+                                <div className="bg-primary/10 rounded-full p-4 border-2 border-primary/20">
+                                    <step.icon className="w-8 h-8 text-primary" />
+                                </div>
+                            </div>
+                            <h3 className="font-headline text-2xl">{step.title}</h3>
+                            <p className="mt-2 text-muted-foreground/90">{step.description}</p>
                         </MotionDiv>
-                        <div className="grid md:grid-cols-1 gap-8">
-                            {availableStays.map((stay, index) => {
-                                 const image = {imageUrl: `https://picsum.photos/seed/${stay.id}/800/600`, imageHint: stay.name, description: stay.name};
-                                 const totalPrice = nights * stay.price_per_night * searchParams!.rooms;
-                                return (
-                                <MotionDiv key={stay.id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.1 }}>
-                                    <div className="bg-card rounded-2xl border shadow-md overflow-hidden grid md:grid-cols-12 gap-0">
-                                        <div className="md:col-span-5 relative">
-                                            <Image
-                                                src={image.imageUrl} alt={stay.name} width={800} height={600}
-                                                className="object-cover w-full h-64 md:h-full"
-                                                data-ai-hint={image.imageHint}
-                                            />
-                                        </div>
-                                        <div className="md:col-span-7 p-6 md:p-8 flex flex-col">
-                                             <h3 className="font-headline text-3xl text-primary">{stay.name}</h3>
-                                             <p className="mt-2 text-muted-foreground flex-grow">{stay.short_description}</p>
-                                            <div className="mt-4 flex items-center space-x-6 text-sm text-muted-foreground">
-                                                <div className="flex items-center"><Users className="h-4 w-4 mr-2 text-primary/70" /><span>Up to {stay.max_adults + stay.max_children} guests per room</span></div>
-                                                <div className="flex items-center"><Bed className="h-4 w-4 mr-2 text-primary/70" /><span>{stay.available_rooms} rooms available</span></div>
-                                            </div>
-                                            <div className="mt-6 pt-6 border-t flex flex-col md:flex-row md:justify-between md:items-end">
-                                                <div>
-                                                     <p className="text-2xl font-bold text-foreground">${totalPrice.toLocaleString()}</p>
-                                                     <p className="text-sm font-normal text-muted-foreground">${stay.price_per_night}/night ({nights} nights, {searchParams?.rooms} rooms)</p>
-                                                </div>
-                                                <Button size="lg" className="w-full md:w-auto mt-4 md:mt-0" onClick={() => handleSelectStay(stay)}>Select Stay</Button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </MotionDiv>
-                            )})}
-                        </div>
-                        <div className="text-center">
-                            <Button variant="outline" onClick={handleModifySearch}>Modify Search</Button>
-                        </div>
-                    </div>
-                )}
-            </div>
+                    ))}
+                </div>
+            </Section>
+          )}
       </div>
-    }
     </div>
   );
 }
