@@ -65,7 +65,7 @@ export function BookingEnquiry() {
             viewport={{ once: true, amount: 0.2 }}
             transition={{ duration: 0.6 }}
           >
-            <h2 className="font-headline text-center text-4xl md:text-5xl text-primary">
+            <h2 className="font-headline text-center text-4xl md:text-5xl">
               Start Your Journey
             </h2>
             <p className="mt-4 max-w-2xl mx-auto text-center text-lg text-muted-foreground">

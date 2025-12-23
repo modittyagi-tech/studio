@@ -23,21 +23,21 @@ export function Hero() {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1.1, ease: "easeOut" }}
-          className="max-w-3xl text-white"
+          className="max-w-4xl text-white"
         >
-          <h1 className="text-5xl md:text-7xl font-serif leading-tight mb-6">
+          <h1 className="text-5xl md:text-7xl font-headline leading-tight mb-6">
             Escape to Nature’s Embrace
           </h1>
 
-          <p className="text-lg md:text-xl opacity-90 mb-10">
+          <p className="text-lg md:text-xl opacity-90 mb-10 max-w-2xl mx-auto leading-relaxed">
             A luxury dome stay where silence, comfort, and the mountains meet.
           </p>
 
           <a
-            href="#stays"
-            className="inline-block rounded-full bg-white px-10 py-4 text-sm font-medium tracking-wide text-black transition hover:bg-neutral-200"
+            href="#booking"
+            className="inline-block rounded-md bg-white px-10 py-4 text-sm font-medium tracking-wide text-black transition hover:bg-neutral-200"
           >
-            Explore Stays
+            Book Your Stay
           </a>
         </motion.div>
       </div>

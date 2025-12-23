@@ -17,7 +17,7 @@ export function ExperienceOverview() {
                     viewport={{ once: true, amount: 0.3 }}
                     transition={{ duration: 0.8 }}
                 >
-                    <h2 className="font-headline text-4xl md:text-5xl lg:text-6xl text-primary">More Than a Stay, It's an Experience</h2>
+                    <h2 className="font-headline text-4xl md:text-5xl text-primary">More Than a Stay, It's an Experience</h2>
                     <div className="mt-6 space-y-6 text-lg text-muted-foreground/90 leading-relaxed">
                         <p>
                             At Glampify, a getaway is a seamless blend of raw adventure and refined serenity. It's waking up to the gentle sounds of nature, without sacrificing an ounce of comfort.

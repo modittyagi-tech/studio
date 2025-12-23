@@ -25,7 +25,7 @@ export function StayCard({ stay }: { stay: Stay }) {
         </Link>
       )}
       <div className="p-6 flex flex-col flex-grow">
-        <h3 className="font-headline text-2xl text-primary">{stay.name}</h3>
+        <h3 className="font-headline text-2xl">{stay.name}</h3>
         <p className="mt-2 text-muted-foreground flex-grow">{stay.short_description}</p>
         <div className="mt-4 flex items-center space-x-6 text-sm text-muted-foreground">
             <div className="flex items-center">

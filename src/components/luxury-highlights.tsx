@@ -36,7 +36,7 @@ export function LuxuryHighlights() {
             viewport={{ once: true, amount: 0.2 }}
             transition={{ duration: 0.6 }}
         >
-          <h2 className="font-headline text-center text-4xl md:text-5xl lg:text-6xl">Uncompromising Luxury</h2>
+          <h2 className="font-headline text-center text-4xl md:text-5xl">Uncompromising Luxury</h2>
           <p className="mt-4 max-w-2xl mx-auto text-center text-lg text-muted-foreground/90">
             We've thought of everything so you don't have to.
           </p>

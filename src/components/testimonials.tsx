@@ -16,7 +16,7 @@ export function Testimonials() {
           viewport={{ once: true, amount: 0.2 }}
           transition={{ duration: 0.6 }}
         >
-          <h2 className="font-headline text-center text-4xl md:text-5xl lg:text-6xl">Words From Our Guests</h2>
+          <h2 className="font-headline text-center text-4xl md:text-5xl">Words From Our Guests</h2>
           <p className="mt-4 max-w-2xl mx-auto text-center text-lg text-muted-foreground/90">
             Don't just take our word for it. Here's what our guests have to say.
           </p>
