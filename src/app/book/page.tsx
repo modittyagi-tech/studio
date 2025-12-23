@@ -78,6 +78,12 @@ export default function BookPage() {
   const [finalBookingId, setFinalBookingId] = useState<string | null>(null);
   const { toast } = useToast();
 
+  const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
+  const [dateRange, setDateRange] = useState<DateRange | undefined>({
+    from: addDays(new Date(), 1),
+    to: addDays(new Date(), 5),
+  });
+
   const availabilityForm = useForm<SearchParams>({
     resolver: zodResolver(availabilitySchema),
     defaultValues: {
@@ -95,14 +101,16 @@ export default function BookPage() {
   const [hasMounted, setHasMounted] = useState(false);
   useEffect(() => {
     setHasMounted(true);
+    const initialDates = {
+        from: addDays(new Date(), 1),
+        to: addDays(new Date(), 5),
+    };
+    setDateRange(initialDates);
     availabilityForm.reset({
       adults: 2,
       children: 0,
       rooms: 1,
-      dates: {
-        from: addDays(new Date(), 1),
-        to: addDays(new Date(), 5),
-      }
+      dates: initialDates
     });
   }, [availabilityForm]);
   
@@ -360,7 +368,7 @@ export default function BookPage() {
                             name="dates"
                             render={({ field }) => (
                                 <FormItem>
-                                <Popover>
+                                <Popover open={isDatePickerOpen} onOpenChange={setIsDatePickerOpen}>
                                     <PopoverTrigger asChild>
                                         <Button
                                             id="date"
@@ -385,12 +393,26 @@ export default function BookPage() {
                                     <Calendar
                                         initialFocus
                                         mode="range"
-                                        defaultMonth={field.value?.from}
-                                        selected={field.value as DateRange}
-                                        onSelect={field.onChange}
+                                        defaultMonth={dateRange?.from}
+                                        selected={dateRange}
+                                        onSelect={setDateRange}
                                         numberOfMonths={2}
                                         disabled={(date) => date < new Date(new Date().setHours(0,0,0,0))}
                                     />
+                                    <div className="p-4 border-t">
+                                        <Button
+                                            className="w-full"
+                                            onClick={() => {
+                                                if (dateRange) {
+                                                    field.onChange(dateRange);
+                                                }
+                                                setIsDatePickerOpen(false);
+                                            }}
+                                            disabled={!dateRange?.from || !dateRange?.to}
+                                        >
+                                            Apply
+                                        </Button>
+                                    </div>
                                     </PopoverContent>
                                 </Popover>
                                 <FormMessage className="pl-2 pt-1" />
