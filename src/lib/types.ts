@@ -14,6 +14,7 @@ export interface Stay {
   total_rooms: number;
   max_adults: number;
   max_children: number;
+  max_guests_per_room: number;
 }
 
 export interface Testimonial {
@@ -29,5 +30,4 @@ export interface NavLink {
     label: string;
 }
 
-    
     

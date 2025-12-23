@@ -6,7 +6,7 @@ import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { supabase } from "@/lib/supabase";
-import type { Stay } from "@/lib/types";
+import { Stay, Amenity } from "@/lib/types";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -29,6 +29,7 @@ import Image from "next/image";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { PageHeader } from "@/components/page-header";
 import { Textarea } from "@/components/ui/textarea";
+import { mockStays } from "@/lib/data";
 
 // Schema for the main availability search form
 const availabilitySchema = z.object({
@@ -78,6 +79,10 @@ export default function BookPage() {
       adults: 2,
       children: 0,
       rooms: 1,
+      dates: {
+        from: addDays(new Date(), 1),
+        to: addDays(new Date(), 5),
+      }
     },
   });
 
@@ -89,16 +94,11 @@ export default function BookPage() {
   const [hasMounted, setHasMounted] = useState(false);
   useEffect(() => {
     setHasMounted(true);
-    const initialDates = {
-        from: addDays(new Date(), 1),
-        to: addDays(new Date(), 5),
-    };
-    availabilityForm.setValue('dates', initialDates);
-  }, [availabilityForm]);
+  }, []);
   
   // Calculate total guests for display and validation
   const totalGuests = useMemo(() => {
-    const values = availabilityForm.getValues();
+    const values = availabilityForm.watch();
     return (values.adults || 0) + (values.children || 0);
   }, [availabilityForm.watch('adults'), availabilityForm.watch('children')]);
 
@@ -132,11 +132,23 @@ export default function BookPage() {
       if (error) throw error;
       
       const staysWithAvailability = (data as any[])
-        .map(stay => ({ ...stay, available_rooms: stay.total_rooms - (stay.booked_rooms || 0) }))
-        .filter(stay => 
-            (stay.available_rooms >= values.rooms) &&
-            ((stay.max_adults + stay.max_children) * values.rooms) >= (values.adults + values.children)
-        );
+        .map(stayFromDb => {
+            const mockStayData = mockStays.find(ms => ms.id === stayFromDb.id);
+            if (!mockStayData) return null;
+            
+            const available_rooms = stayFromDb.total_rooms - (stayFromDb.booked_rooms || 0);
+            
+            return {
+                ...mockStayData,
+                ...stayFromDb,
+                available_rooms,
+            };
+        })
+        .filter((stay): stay is AvailableStay => {
+            if (!stay) return false;
+            return (stay.available_rooms >= values.rooms) &&
+                   (((stay.max_adults + stay.max_children) * values.rooms) >= (values.adults + values.children));
+        });
 
       setAvailableStays(staysWithAvailability);
       setStep("results");
@@ -247,6 +259,7 @@ export default function BookPage() {
 
   if (selectedStay && searchParams) {
     const totalPrice = nights * selectedStay.price_per_night * searchParams.rooms;
+    const heroImage = PlaceHolderImages.find(i => i.id === selectedStay.images?.[0]);
     return (
         <div className="bg-background">
             <PageHeader title="Complete Your Booking" description={`You're just a few steps away from securing your stay at ${selectedStay.name}.`}/>
@@ -302,9 +315,9 @@ export default function BookPage() {
                                 <div className="sticky top-24">
                                     <h2 className="font-headline text-3xl text-primary mb-6">Your Stay</h2>
                                     <div className="bg-card border rounded-2xl overflow-hidden">
-                                        {PlaceHolderImages.find(i => i.id === selectedStay.images[0]) &&
+                                        {heroImage &&
                                           <Image 
-                                            src={PlaceHolderImages.find(i => i.id === selectedStay.images[0])!.imageUrl} 
+                                            src={heroImage.imageUrl} 
                                             alt={selectedStay.name} 
                                             width={600} 
                                             height={400} 
@@ -421,7 +434,7 @@ export default function BookPage() {
                                          <Users className="mr-3 h-5 w-5 text-primary/70" />
                                          <div>
                                             <p className="text-sm text-muted-foreground">Guests & Rooms</p>
-                                            <p className="text-foreground">{totalGuests} guest{totalGuests > 1 && 's'}, {availabilityForm.getValues('rooms')} room{availabilityForm.getValues('rooms') > 1 && 's'}</p>
+                                            <p className="text-foreground">{totalGuests} guest{totalGuests > 1 && 's'}, {availabilityForm.watch('rooms')} room{availabilityForm.watch('rooms') > 1 && 's'}</p>
                                          </div>
                                     </Button>
                                 </PopoverTrigger>
@@ -481,7 +494,7 @@ export default function BookPage() {
                         </MotionDiv>
                         <div className="grid md:grid-cols-1 gap-8">
                             {availableStays.map((stay, index) => {
-                                 const image = PlaceHolderImages.find(img => img.id === stay.images[0]) || {imageUrl: `https://picsum.photos/seed/${stay.id}/800/600`, imageHint: stay.name, description: stay.name};
+                                 const image = PlaceHolderImages.find(img => img.id === stay.images?.[0]) || {imageUrl: `https://picsum.photos/seed/${stay.id}/800/600`, imageHint: stay.name, description: stay.name};
                                  const totalPrice = nights * stay.price_per_night * searchParams!.rooms;
                                 return (
                                 <MotionDiv key={stay.id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.1 }}>
@@ -581,6 +594,4 @@ if (typeof window !== 'undefined') {
     document.head.appendChild(styleSheet);
 }
 
-    
-    
     
