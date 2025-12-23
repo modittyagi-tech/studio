@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect } from "react";
@@ -95,7 +94,7 @@ export default function BookPage() {
             to: addDays(new Date(), 4),
         }
     });
-  }, [availabilityForm]);
+  }, []);
 
 
   async function onCheckAvailability(values: z.infer<typeof availabilitySchema>) {
@@ -508,5 +507,3 @@ if (typeof window !== 'undefined') {
     styleSheet.innerText = styles;
     document.head.appendChild(styleSheet);
 }
-
-    
