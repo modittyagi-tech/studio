@@ -24,7 +24,7 @@ import {
   SheetContent,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
+import { createClient } from '@/utils/supabase/client'
 import { useRouter } from 'next/navigation';
 import { User } from "@supabase/supabase-js";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
@@ -37,7 +37,7 @@ const navItems = [
 ];
 
 export function AdminHeader({ user }: { user: User }) {
-    const supabase = createClientComponentClient();
+    const supabase = createClient();
     const router = useRouter();
 
     const handleSignOut = async () => {
