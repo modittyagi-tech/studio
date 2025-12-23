@@ -18,9 +18,9 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { CalendarIcon, Minus, Plus, Users, Bed, Home, User, Mail, Phone, MessageSquare } from "lucide-react";
+import { CalendarIcon, Minus, Plus, Users, Bed } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
-import { addDays, format, isAfter, differenceInDays, parseISO } from "date-fns";
+import { addDays, format, isAfter, differenceInDays } from "date-fns";
 import { cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
 import {
@@ -79,11 +79,7 @@ export default function BookPage() {
   const { toast } = useToast();
 
   const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
-  const [dateRange, setDateRange] = useState<DateRange | undefined>({
-    from: addDays(new Date(), 1),
-    to: addDays(new Date(), 5),
-  });
-
+  
   const availabilityForm = useForm<SearchParams>({
     resolver: zodResolver(availabilitySchema),
     defaultValues: {
@@ -105,13 +101,7 @@ export default function BookPage() {
         from: addDays(new Date(), 1),
         to: addDays(new Date(), 5),
     };
-    setDateRange(initialDates);
-    availabilityForm.reset({
-      adults: 2,
-      children: 0,
-      rooms: 1,
-      dates: initialDates
-    });
+    availabilityForm.setValue('dates', initialDates);
   }, [availabilityForm]);
   
   // Calculate total guests for display and validation
@@ -131,6 +121,16 @@ export default function BookPage() {
 
     const { from: check_in, to: check_out } = values.dates;
 
+    if (!check_in || !check_out) {
+        toast({
+            variant: "destructive",
+            title: "Invalid Dates",
+            description: "Please select both a check-in and check-out date.",
+        });
+        setIsLoading(false);
+        return;
+    }
+
     try {
       const { data, error } = await supabase.rpc('get_available_stays', {
         p_check_in: check_in.toISOString().split('T')[0],
@@ -143,7 +143,7 @@ export default function BookPage() {
         .map(stay => ({ ...stay, available_rooms: stay.total_rooms - (stay.booked_rooms || 0) }))
         .filter(stay => 
             (stay.available_rooms >= values.rooms) &&
-            (stay.max_guests >= (values.adults + values.children))
+            (stay.max_guests_per_room * values.rooms) >= (values.adults + values.children)
         );
 
       setAvailableStays(staysWithAvailability);
@@ -393,26 +393,17 @@ export default function BookPage() {
                                     <Calendar
                                         initialFocus
                                         mode="range"
-                                        defaultMonth={dateRange?.from}
-                                        selected={dateRange}
-                                        onSelect={setDateRange}
+                                        defaultMonth={field.value?.from}
+                                        selected={field.value}
+                                        onSelect={(range) => {
+                                            field.onChange(range);
+                                            if (range?.from && range?.to) {
+                                                setIsDatePickerOpen(false);
+                                            }
+                                        }}
                                         numberOfMonths={2}
                                         disabled={(date) => date < new Date(new Date().setHours(0,0,0,0))}
                                     />
-                                    <div className="p-4 border-t">
-                                        <Button
-                                            className="w-full"
-                                            onClick={() => {
-                                                if (dateRange) {
-                                                    field.onChange(dateRange);
-                                                }
-                                                setIsDatePickerOpen(false);
-                                            }}
-                                            disabled={!dateRange?.from || !dateRange?.to}
-                                        >
-                                            Apply
-                                        </Button>
-                                    </div>
                                     </PopoverContent>
                                 </Popover>
                                 <FormMessage className="pl-2 pt-1" />
@@ -504,8 +495,8 @@ export default function BookPage() {
                                              <h3 className="font-headline text-3xl text-primary">{stay.name}</h3>
                                              <p className="mt-2 text-muted-foreground flex-grow">{stay.short_description}</p>
                                             <div className="mt-4 flex items-center space-x-6 text-sm text-muted-foreground">
-                                                <div className="flex items-center"><Users className="h-4 w-4 mr-2 text-primary/70" /><span>Up to {stay.max_guests} guests</span></div>
-                                                <div className="flex items-center"><Bed className="h-4 w-4 mr-2 text-primary/70" /><span>{stay.total_rooms} rooms available</span></div>
+                                                <div className="flex items-center"><Users className="h-4 w-4 mr-2 text-primary/70" /><span>Up to {stay.max_guests_per_room} guests per room</span></div>
+                                                <div className="flex items-center"><Bed className="h-4 w-4 mr-2 text-primary/70" /><span>{stay.available_rooms} rooms available</span></div>
                                             </div>
                                             <div className="mt-6 pt-6 border-t flex flex-col md:flex-row md:justify-between md:items-end">
                                                 <div>
