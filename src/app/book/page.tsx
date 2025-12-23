@@ -5,7 +5,7 @@ import { useState, useMemo } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { supabase } from "@/lib/supabase";
+import { createClient } from "@/utils/supabase/client";
 import { Stay } from "@/lib/types";
 import { Button } from "@/components/ui/button";
 import {
@@ -89,6 +89,8 @@ export default function BookPage() {
   const [finalBookingId, setFinalBookingId] = useState<string | null>(null);
   const { toast } = useToast();
   
+  const supabase = createClient();
+
   const availabilityForm = useForm<SearchParams>({
     resolver: zodResolver(availabilitySchema),
     defaultValues: {
@@ -229,7 +231,7 @@ export default function BookPage() {
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
                                     <p className="text-sm text-muted-foreground">Booking Reference</p>
-                                    <p className="font-mono text-primary text-base font-bold">{finalBookingId}</p>
+                                    <p className="font-mono text-primary text-base font-bold">{finalBookingId.split('-')[0]}</p>
                                 </div>
                                 <div className="text-right">
                                     <p className="text-sm text-muted-foreground">Status</p>
