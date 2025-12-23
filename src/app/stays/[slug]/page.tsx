@@ -30,6 +30,7 @@ export default function StayDetailPage({ params }: { params: { slug: string } })
 
     const heroImage = PlaceHolderImages.find(img => img.id === stay.images[0]);
     const galleryImages = stay.images.slice(1).map(id => PlaceHolderImages.find(img => img.id === id)).filter(Boolean);
+    const max_guests_per_room = stay.max_adults + stay.max_children;
 
     return (
         <div>
@@ -124,7 +125,7 @@ export default function StayDetailPage({ params }: { params: { slug: string } })
                                 <ul className="mt-6 space-y-4">
                                     <li className="flex items-center text-muted-foreground">
                                         <Users className="w-5 h-5 mr-4 text-primary/70" />
-                                        <span>Up to {stay.max_guests_per_room} people</span>
+                                        <span>Up to {max_guests_per_room} people</span>
                                     </li>
                                     <li className="flex items-center">
                                         <span className="font-bold w-32">Price:</span>

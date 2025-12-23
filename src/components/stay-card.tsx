@@ -9,6 +9,7 @@ import { MotionDiv } from './motion';
 
 export function StayCard({ stay }: { stay: Stay }) {
   const image = PlaceHolderImages.find(img => img.id === stay.images[0]) || {imageUrl: `https://picsum.photos/seed/${stay.id}/600/450`, imageHint: stay.name, description: stay.name};
+  const max_guests_per_room = stay.max_adults + stay.max_children;
 
   return (
     <div className="block group h-full">
@@ -40,7 +41,7 @@ export function StayCard({ stay }: { stay: Stay }) {
             <div className="mt-4 flex items-center space-x-6 text-sm text-muted-foreground">
                 <div className="flex items-center">
                     <Users className="h-4 w-4 mr-2 text-primary/70" />
-                    <span>{stay.max_guests_per_room} guests</span>
+                    <span>{max_guests_per_room} guests</span>
                 </div>
             </div>
             <div className="mt-6 pt-4 border-t flex justify-between items-center">

@@ -259,7 +259,7 @@ export default function BookPage() {
 
   if (selectedStay && searchParams) {
     const totalPrice = nights * selectedStay.price_per_night * searchParams.rooms;
-    const heroImage = PlaceHolderImages.find(i => i.id === selectedStay.images?.[0]);
+    const heroImage = PlaceHolderImages.find(i => i.id === (stay.images && stay.images.length > 0 ? stay.images[0] : ''));
     return (
         <div className="bg-background">
             <PageHeader title="Complete Your Booking" description={`You're just a few steps away from securing your stay at ${selectedStay.name}.`}/>
@@ -494,7 +494,7 @@ export default function BookPage() {
                         </MotionDiv>
                         <div className="grid md:grid-cols-1 gap-8">
                             {availableStays.map((stay, index) => {
-                                 const image = PlaceHolderImages.find(img => img.id === stay.images?.[0]) || {imageUrl: `https://picsum.photos/seed/${stay.id}/800/600`, imageHint: stay.name, description: stay.name};
+                                 const image = PlaceHolderImages.find(img => img.id === (stay.images && stay.images.length > 0 ? stay.images[0] : '')) || {imageUrl: `https://picsum.photos/seed/${stay.id}/800/600`, imageHint: stay.name, description: stay.name};
                                  const totalPrice = nights * stay.price_per_night * searchParams!.rooms;
                                 return (
                                 <MotionDiv key={stay.id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.1 }}>
