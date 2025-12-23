@@ -72,6 +72,8 @@ export const footerLinks = {
     ],
     support: [
         { href: '/contact', label: 'Contact' },
-        { href: '/policies', label: 'Policies' },
+        { href: '/privacy-policy', label: 'Privacy Policy' },
+        { href: '/terms-and-conditions', label: 'Terms & Conditions' },
+        { href: '/cancellation-policy', label: 'Cancellation Policy' },
     ],
 };
