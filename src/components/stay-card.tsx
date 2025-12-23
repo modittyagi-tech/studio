@@ -7,10 +7,10 @@ import { ArrowRight, Users, Bed } from 'lucide-react';
 import { MotionDiv } from './motion';
 
 export function StayCard({ stay }: { stay: Stay }) {
-  const image = PlaceHolderImages.find(img => img.id === stay.images[0]);
+  const image = PlaceHolderImages.find(img => img.id === stay.images[0]) || {imageUrl: `https://picsum.photos/seed/${stay.id}/600/450`, imageHint: stay.name, description: stay.name};
 
   return (
-    <Link href={`/stays/${stay.slug}`} className="block group">
+    <div className="block group h-full">
         <MotionDiv
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -19,8 +19,8 @@ export function StayCard({ stay }: { stay: Stay }) {
         whileHover={{ y: -6 }}
         className="overflow-hidden rounded-2xl bg-card border h-full flex flex-col transition-shadow duration-300 hover:shadow-xl"
         >
-        {image && (
-            <div className="block overflow-hidden">
+        
+        <Link href={`/stays/${stay.slug}`} className="block overflow-hidden">
             <div className="aspect-w-4 aspect-h-3">
                 <Image
                 src={image.imageUrl}
@@ -31,8 +31,8 @@ export function StayCard({ stay }: { stay: Stay }) {
                 data-ai-hint={image.imageHint}
                 />
             </div>
-            </div>
-        )}
+        </Link>
+        
         <div className="p-6 flex flex-col flex-grow">
             <h3 className="font-headline text-2xl">{stay.name}</h3>
             <p className="mt-2 text-muted-foreground flex-grow">{stay.short_description}</p>
@@ -50,12 +50,12 @@ export function StayCard({ stay }: { stay: Stay }) {
             <p className="text-xl font-bold">
                 ${stay.price_per_night}<span className="text-sm font-normal text-muted-foreground">/night</span>
             </p>
-            <div className="text-primary group-hover:text-primary flex items-center">
+            <Link href={`/stays/${stay.slug}`} className="text-primary group-hover:text-primary flex items-center">
                 View Details <ArrowRight className="w-4 h-4 ml-2 transition-transform duration-300 group-hover:translate-x-1" />
-            </div>
+            </Link>
             </div>
         </div>
         </MotionDiv>
-    </Link>
+    </div>
   );
 }

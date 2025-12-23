@@ -70,7 +70,7 @@ export function BookingEnquiry({ isContactPage = false }: { isContactPage?: bool
                 Start Your Journey
               </h2>
               <p className="mt-4 max-w-2xl mx-auto text-center text-lg text-muted-foreground">
-                Have questions or ready to book? Fill out the form below and our team will be in touch.
+                Have questions or prefer to book via email? Fill out the form below and our team will be in touch.
               </p>
             </MotionDiv>
           )}
@@ -151,6 +151,7 @@ export function BookingEnquiry({ isContactPage = false }: { isContactPage?: bool
                           className="min-h-[120px]"
                           {...field}
                         />
+
                       </FormControl>
                       <FormMessage />
                     </FormItem>
