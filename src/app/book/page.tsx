@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useMemo } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -142,8 +142,7 @@ export default function BookPage() {
         .filter((stay): stay is AvailableStay => {
             if (!stay) return false;
             // Filter based on rooms required and guest capacity
-            const capacityPerRoom = stay.max_adults + stay.max_children;
-            const totalCapacity = capacityPerRoom * values.rooms;
+            const totalCapacity = (stay.max_adults + stay.max_children) * values.rooms;
             const totalGuests = values.adults + values.children;
 
             return stay.available_rooms >= values.rooms && totalCapacity >= totalGuests;
@@ -153,7 +152,6 @@ export default function BookPage() {
       setStep("results");
 
     } catch (error: any) {
-      console.error('Error fetching stays:', error);
       toast({
         variant: "destructive",
         title: "Search Failed",
@@ -193,7 +191,6 @@ export default function BookPage() {
       window.scrollTo(0, 0);
 
     } catch (error: any) {
-      console.error("Error creating booking:", error);
       toast({
         variant: "destructive",
         title: "Booking Failed",
@@ -214,7 +211,7 @@ export default function BookPage() {
     setSearchPerformed(false);
   }
 
-  const nights = searchParams?.dates.from && searchParams?.dates.to ? differenceInDays(searchParams.dates.to, searchParams.dates.to) : 0;
+  const nights = searchParams?.dates.from && searchParams?.dates.to ? differenceInDays(searchParams.dates.to, searchParams.dates.from) : 0;
   
   if (step === 'confirmation' && finalBookingId) {
     return (
@@ -584,5 +581,7 @@ if (typeof window !== 'undefined') {
     styleSheet.innerText = styles;
     document.head.appendChild(styleSheet);
 }
+
+    
 
     
