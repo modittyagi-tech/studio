@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { CalendarIcon, Minus, Plus, Users, Bed, AlertCircle, Search } from "lucide-react";
+import { CalendarIcon, Minus, Plus, Users, Bed, AlertCircle } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import { addDays, format, isAfter, differenceInDays } from "date-fns";
 import { cn } from "@/lib/utils";
@@ -28,6 +28,7 @@ import { MotionDiv } from "@/components/motion";
 import Image from "next/image";
 import { PageHeader } from "@/components/page-header";
 import { Textarea } from "@/components/ui/textarea";
+import { mockStays } from "@/lib/data";
 
 // Schema for the main availability search form
 const availabilitySchema = z.object({
@@ -53,7 +54,7 @@ const bookingSchema = z.object({
 
 type SearchParams = z.infer<typeof availabilitySchema>;
 
-// Represents a stay with its real-time availability
+// Represents a stay with its real-time availability from Supabase
 interface AvailableStay extends Stay {
   available_rooms: number;
 }
@@ -92,14 +93,13 @@ export default function BookPage() {
     return (values.adults || 0) + (values.children || 0);
   }, [availabilityForm]);
 
-
-  // Handler for the "Check Availability" button
   async function onCheckAvailability(values: SearchParams) {
     setIsLoading(true);
     setSearchPerformed(true);
     setAvailableStays([]);
-    setSearchParams(values);
+    setSelectedStay(null);
     setStep("search"); 
+    setSearchParams(values);
 
     const { from: check_in, to: check_out } = values.dates;
     
@@ -114,20 +114,26 @@ export default function BookPage() {
     }
     
     try {
-        const { data: stays, error } = await supabase.rpc('get_available_stays', {
-            check_in_date: check_in.toISOString(),
-            check_out_date: check_out.toISOString()
+        const { data: availableData, error } = await supabase.rpc('get_available_stays', {
+            p_check_in_date: check_in.toISOString(),
+            p_check_out_date: check_out.toISOString()
         });
 
         if (error) throw error;
         
-        const staysWithAvailability: AvailableStay[] = stays
-          .filter((stay: any) => stay.available_rooms >= values.rooms && ((stay.max_adults + stay.max_children) * values.rooms) >= (values.adults + values.children))
-          .map((stay: any) => ({
-                ...stay,
-                images: stay.images || [],
-                amenities: stay.amenities || []
-            }));
+        const staysWithAvailability: AvailableStay[] = availableData
+          .map((stay: any) => {
+              const mock = mockStays.find(m => m.id === stay.id);
+              return {
+                  ...mock, // Get images, descriptions etc. from mock
+                  ...stay, // Get live availability from supabase
+              } as AvailableStay
+          })
+          .filter((stay: AvailableStay) => {
+              const fitsGuests = ((stay.max_adults + stay.max_children) * values.rooms) >= (values.adults + values.children);
+              const hasRooms = stay.available_rooms >= values.rooms;
+              return fitsGuests && hasRooms;
+          });
         
         setAvailableStays(staysWithAvailability);
         setStep("results");
@@ -137,7 +143,7 @@ export default function BookPage() {
         toast({
             variant: "destructive",
             title: "Search Failed",
-            description: "Could not fetch available stays. Please try again later.",
+            description: error.message || "Could not fetch available stays. Please try again later.",
         });
         setStep("search"); 
     } finally {
@@ -145,7 +151,6 @@ export default function BookPage() {
     }
   }
   
-  // Handler for the final "Confirm Booking" submission
   async function onBookStay(values: z.infer<typeof bookingSchema>) {
     if (!selectedStay || !searchParams) return;
 
@@ -174,10 +179,11 @@ export default function BookPage() {
       window.scrollTo(0, 0);
 
     } catch (error: any) {
+      console.error("Booking error:", error);
       toast({
         variant: "destructive",
         title: "Booking Failed",
-        description: "There was a problem submitting your booking. Please try again.",
+        description: error.message || "There was a problem submitting your booking. Please try again.",
       });
     } finally {
         setIsLoading(false);
@@ -295,6 +301,7 @@ export default function BookPage() {
                                             width={600} 
                                             height={400} 
                                             className="w-full object-cover"
+                                            data-ai-hint={heroImage.imageHint || 'stay image'}
                                             />
                                         }
                                         <div className="p-6">
@@ -349,6 +356,7 @@ export default function BookPage() {
                                     <Popover>
                                         <PopoverTrigger asChild>
                                         <button
+                                            id="date"
                                             className={cn(
                                                 "w-full justify-start text-left font-normal",
                                             )}
@@ -560,5 +568,3 @@ if (typeof window !== 'undefined') {
     styleSheet.innerText = styles;
     document.head.appendChild(styleSheet);
 }
-
-    

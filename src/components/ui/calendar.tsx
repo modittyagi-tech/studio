@@ -8,6 +8,7 @@ import { DayPicker, DropdownProps } from "react-day-picker"
 import { cn } from "@/lib/utils"
 import { buttonVariants } from "@/components/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./select"
+import { useIsMobile } from "@/hooks/use-mobile"
 
 export type CalendarProps = React.ComponentProps<typeof DayPicker>
 
@@ -17,10 +18,14 @@ function Calendar({
   showOutsideDays = true,
   ...props
 }: CalendarProps) {
+  const isMobile = useIsMobile();
+  const numberOfMonths = isMobile ? 1 : 2;
+
   return (
     <DayPicker
       showOutsideDays={showOutsideDays}
       className={cn("p-3", className)}
+      numberOfMonths={numberOfMonths}
       classNames={{
         months: "flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0",
         month: "space-y-4",
