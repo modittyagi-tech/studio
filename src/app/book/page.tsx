@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { CalendarIcon, Minus, Plus, Users, Bed, AlertCircle } from "lucide-react";
+import { CalendarIcon, Minus, Plus, Users, Bed, AlertCircle, CalendarCheck, BedDouble, CheckCircle } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import { addDays, format, isAfter, differenceInDays } from "date-fns";
 import { cn } from "@/lib/utils";
@@ -29,6 +29,7 @@ import Image from "next/image";
 import { PageHeader } from "@/components/page-header";
 import { Textarea } from "@/components/ui/textarea";
 import { mockStays } from "@/lib/data";
+import Section from "@/components/section";
 
 // Schema for the main availability search form
 const availabilitySchema = z.object({
@@ -58,6 +59,24 @@ type SearchParams = z.infer<typeof availabilitySchema>;
 interface AvailableStay extends Stay {
   available_rooms: number;
 }
+
+const bookingSteps = [
+    {
+        icon: CalendarCheck,
+        title: "1. Check Availability",
+        description: "Select your desired dates and guest count to find the perfect stay for your escape.",
+    },
+    {
+        icon: BedDouble,
+        title: "2. Select Your Stay",
+        description: "Browse through the available accommodations and choose the one that best suits your needs.",
+    },
+    {
+        icon: CheckCircle,
+        title: "3. Book & Relax",
+        description: "Complete your booking with our secure form and get ready to unwind in nature.",
+    },
+];
 
 export default function BookPage() {
   const [step, setStep] = useState<"search" | "results" | "confirmation">("search");
@@ -434,6 +453,36 @@ export default function BookPage() {
             </MotionDiv>
         </div>
       </section>
+
+      {!searchPerformed && (
+        <Section className="py-24 bg-background">
+            <div className="text-center">
+                <h2 className="font-headline text-3xl md:text-4xl text-primary">Your Journey to Tranquility</h2>
+                <p className="mt-4 max-w-2xl mx-auto text-lg text-muted-foreground">
+                    Booking your luxury escape is simple and secure.
+                </p>
+            </div>
+            <div className="mt-16 max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12 text-center">
+                {bookingSteps.map((step, index) => (
+                    <MotionDiv
+                        key={index}
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.5, delay: index * 0.1 }}
+                    >
+                        <div className="flex justify-center mb-4">
+                            <div className="bg-primary/10 rounded-full p-4 border-2 border-primary/20">
+                                <step.icon className="w-8 h-8 text-primary" />
+                            </div>
+                        </div>
+                        <h3 className="font-headline text-2xl">{step.title}</h3>
+                        <p className="mt-2 text-muted-foreground/90">{step.description}</p>
+                    </MotionDiv>
+                ))}
+            </div>
+        </Section>
+      )}
       
       { (isLoading || searchPerformed) && 
         <div className="bg-secondary/30 min-h-[500px] py-16 md:py-24 flex items-center justify-center">
