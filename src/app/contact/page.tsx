@@ -8,7 +8,7 @@ export default function ContactPage() {
                 title="Get in Touch"
                 description="We’d love to help you plan your stay. Reach out with any questions or for assistance with your booking."
             />
-            <BookingEnquiry />
+            <BookingEnquiry isContactPage={true} />
         </>
     );
 }

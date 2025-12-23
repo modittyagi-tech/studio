@@ -27,7 +27,7 @@ const bookingSchema = z.object({
   message: z.string().optional(),
 });
 
-export function BookingEnquiry() {
+export function BookingEnquiry({ isContactPage = false }: { isContactPage?: boolean }) {
   const { toast } = useToast();
   const form = useForm<z.infer<typeof bookingSchema>>({
     resolver: zodResolver(bookingSchema),
@@ -59,25 +59,27 @@ export function BookingEnquiry() {
     <div id="booking" className="bg-background">
       <Section>
         <div className="max-w-4xl mx-auto">
+          {!isContactPage && (
+            <MotionDiv
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
+            >
+              <h2 className="font-headline text-center text-4xl md:text-5xl">
+                Start Your Journey
+              </h2>
+              <p className="mt-4 max-w-2xl mx-auto text-center text-lg text-muted-foreground">
+                Have questions or ready to book? Fill out the form below and our team will be in touch.
+              </p>
+            </MotionDiv>
+          )}
           <MotionDiv
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, ease: "easeOut" }}
-          >
-            <h2 className="font-headline text-center text-4xl md:text-5xl">
-              Start Your Journey
-            </h2>
-            <p className="mt-4 max-w-2xl mx-auto text-center text-lg text-muted-foreground">
-              Have questions or ready to book? Fill out the form below and our team will be in touch.
-            </p>
-          </MotionDiv>
-          <MotionDiv
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-            className="mt-12"
+            className={!isContactPage ? "mt-12" : ""}
           >
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -154,7 +156,8 @@ export function BookingEnquiry() {
                     </FormItem>
                   )}
                 />
-                <div className="text-center">
+                <div className="text-center pt-4">
+                   <p className="text-sm text-muted-foreground mb-6">We typically respond within 24 hours. For urgent requests, please don't hesitate to call.</p>
                   <Button type="submit" size="lg" disabled={form.formState.isSubmitting}>
                     {form.formState.isSubmitting ? "Sending..." : "Send Enquiry"}
                   </Button>
