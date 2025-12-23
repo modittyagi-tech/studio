@@ -143,10 +143,10 @@ export default function BookPage() {
             const bookedRooms = bookings.reduce((acc, booking) => acc + booking.rooms_booked, 0);
             const available_rooms = stay.total_rooms - bookedRooms;
             
-            const matchingMockStay = mockStays.find(ms => ms.id === stay.id);
-            if (!matchingMockStay) continue;
-
-            const stayWithAllDetails = { ...stay, ...matchingMockStay, available_rooms };
+            const stayWithAllDetails = {
+                ...stay,
+                available_rooms,
+              };
             
             if (available_rooms >= values.rooms) {
                  const totalGuestsInSearch = values.adults + values.children;
@@ -485,7 +485,7 @@ export default function BookPage() {
                         </MotionDiv>
                         <div className="grid md:grid-cols-1 gap-8">
                             {availableStays.map((stay, index) => {
-                                 const image = PlaceHolderImages.find(img => img.id === stay.images[0]) || {imageUrl: `https://picsum.photos/seed/${stay.id}/800/600`, imageHint: stay.name, description: stay.name};
+                                 const image = PlaceHolderImages.find(img => img.id === stay.images?.[0]) || {imageUrl: `https://picsum.photos/seed/${stay.id}/800/600`, imageHint: stay.name, description: stay.name};
                                  const totalPrice = nights * stay.price_per_night * searchParams!.rooms;
                                 return (
                                 <MotionDiv key={stay.id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.1 }}>
@@ -584,3 +584,5 @@ if (typeof window !== 'undefined') {
     styleSheet.innerText = styles;
     document.head.appendChild(styleSheet);
 }
+
+    
