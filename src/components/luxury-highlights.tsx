@@ -28,7 +28,7 @@ const highlights = [
 
 export function LuxuryHighlights() {
   return (
-    <section className="py-16 md:py-24 bg-background">
+    <section className="py-24 md:py-40 bg-background">
       <div className="container max-w-7xl">
         <MotionDiv
             initial={{ opacity: 0, y: 20 }}
@@ -36,12 +36,12 @@ export function LuxuryHighlights() {
             viewport={{ once: true, amount: 0.2 }}
             transition={{ duration: 0.6 }}
         >
-          <h2 className="font-headline text-center text-4xl md:text-5xl">Uncompromising Luxury</h2>
-          <p className="mt-4 max-w-2xl mx-auto text-center text-lg text-muted-foreground">
+          <h2 className="font-headline text-center text-4xl md:text-5xl lg:text-6xl">Uncompromising Luxury</h2>
+          <p className="mt-4 max-w-2xl mx-auto text-center text-lg text-muted-foreground/90">
             We've thought of everything so you don't have to.
           </p>
         </MotionDiv>
-        <div className="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {highlights.map((highlight, index) => {
             const image = PlaceHolderImages.find(img => img.id === highlight.imageId);
             return (
@@ -53,21 +53,23 @@ export function LuxuryHighlights() {
                 viewport={{ once: true, amount: 0.3 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
               >
-                <div className="relative w-full aspect-square rounded-lg overflow-hidden shadow-lg mx-auto">
+                <div className="relative w-full aspect-square rounded-xl overflow-hidden shadow-lg group mx-auto">
                   {image && (
                       <Image 
                         src={image.imageUrl}
                         alt={highlight.title}
                         fill
-                        className="object-cover"
+                        className="object-cover transition-transform duration-500 ease-in-out group-hover:scale-105"
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                         data-ai-hint={image.imageHint}
                       />
                   )}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-4">
-                      <h3 className="font-headline text-2xl text-white">{highlight.title}</h3>
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+                  <div className="absolute inset-0 flex items-end p-6">
+                      <h3 className="font-headline text-2xl text-white drop-shadow-md">{highlight.title}</h3>
                   </div>
                 </div>
-                <p className="mt-4 text-muted-foreground">{highlight.description}</p>
+                <p className="mt-5 text-muted-foreground/90">{highlight.description}</p>
               </MotionDiv>
             );
           })}

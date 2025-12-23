@@ -2,13 +2,12 @@
 import { mockTestimonials } from '@/lib/data';
 import Image from 'next/image';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
-import { Card, CardContent } from './ui/card';
 import { MotionDiv } from './motion';
 import { Star } from 'lucide-react';
 
 export function Testimonials() {
   return (
-    <section className="py-16 md:py-24 bg-secondary/20">
+    <section className="py-24 md:py-40 bg-secondary/30">
       <div className="container max-w-7xl">
         <MotionDiv
           initial={{ opacity: 0, y: 20 }}
@@ -16,12 +15,12 @@ export function Testimonials() {
           viewport={{ once: true, amount: 0.2 }}
           transition={{ duration: 0.6 }}
         >
-          <h2 className="font-headline text-center text-4xl md:text-5xl">Words from Our Guests</h2>
-          <p className="mt-4 max-w-2xl mx-auto text-center text-lg text-muted-foreground">
+          <h2 className="font-headline text-center text-4xl md:text-5xl lg:text-6xl">Words From Our Guests</h2>
+          <p className="mt-4 max-w-2xl mx-auto text-center text-lg text-muted-foreground/90">
             Don't just take our word for it. Here's what our guests have to say.
           </p>
         </MotionDiv>
-        <div className="mt-12 grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="mt-16 grid grid-cols-1 lg:grid-cols-2 gap-8">
           {mockTestimonials.map((testimonial, index) => {
             const image = PlaceHolderImages.find(img => img.id === testimonial.imageId);
             return (
@@ -29,17 +28,16 @@ export function Testimonials() {
                 key={testimonial.id}
                 initial={{ opacity: 0, y: 50 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.3 }}
+                viewport={{ once: true, amount: 0.2 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
               >
-                <Card className="h-full">
-                  <CardContent className="p-8 h-full flex flex-col justify-center">
-                    <div className="flex mb-2">
+                <div className="h-full bg-background/50 rounded-xl p-8 lg:p-12 flex flex-col justify-center border">
+                    <div className="flex mb-4">
                         {[...Array(5)].map((_, i) => (
-                            <Star key={i} className="h-5 w-5 text-primary fill-primary" />
+                            <Star key={i} className="h-5 w-5 text-primary fill-current" />
                         ))}
                     </div>
-                    <blockquote className="text-lg text-foreground italic">
+                    <blockquote className="text-lg text-foreground/80 leading-relaxed italic">
                       "{testimonial.quote}"
                     </blockquote>
                     <div className="mt-6 flex items-center">
@@ -58,8 +56,7 @@ export function Testimonials() {
                         <p className="text-sm text-muted-foreground">{testimonial.location}</p>
                       </div>
                     </div>
-                  </CardContent>
-                </Card>
+                  </div>
               </MotionDiv>
             );
           })}
