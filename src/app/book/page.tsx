@@ -23,14 +23,6 @@ import { Calendar } from "@/components/ui/calendar";
 import { addDays, format, isAfter, differenceInDays } from "date-fns";
 import { cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-  DialogFooter
-} from "@/components/ui/dialog";
 import type { DateRange } from "react-day-picker";
 import { MotionDiv } from "@/components/motion";
 import Image from "next/image";
@@ -588,3 +580,5 @@ if (typeof window !== 'undefined') {
     styleSheet.innerText = styles;
     document.head.appendChild(styleSheet);
 }
+
+    

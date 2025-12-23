@@ -1,3 +1,4 @@
+
 import type { Stay } from '@/lib/types';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -39,11 +40,7 @@ export function StayCard({ stay }: { stay: Stay }) {
             <div className="mt-4 flex items-center space-x-6 text-sm text-muted-foreground">
                 <div className="flex items-center">
                     <Users className="h-4 w-4 mr-2 text-primary/70" />
-                    <span>{stay.max_guests} guests</span>
-                </div>
-                <div className="flex items-center">
-                    <Bed className="h-4 w-4 mr-2 text-primary/70" />
-                    <span>Queen/King</span>
+                    <span>{stay.max_guests_per_room} guests</span>
                 </div>
             </div>
             <div className="mt-6 pt-4 border-t flex justify-between items-center">
@@ -59,3 +56,5 @@ export function StayCard({ stay }: { stay: Stay }) {
     </div>
   );
 }
+
+    

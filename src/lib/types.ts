@@ -8,7 +8,7 @@ export interface Stay {
   short_description: string;
   long_description: string;
   price_per_night: number;
-  max_guests: number;
+  max_guests_per_room: number;
   amenities: Amenity[];
   images: string[]; // array of image IDs from placeholder-images.json
   is_featured: boolean;

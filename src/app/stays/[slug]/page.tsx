@@ -1,10 +1,11 @@
+
 import { PageHeader } from "@/components/page-header";
 import { mockStays } from "@/lib/data";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { Amenity } from "@/lib/types";
-import { Wifi, Wind, Thermometer, Dog, Flame, Utensils, Tv } from "lucide-react";
+import { Wifi, Wind, Thermometer, Dog, Flame, Utensils, Tv, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import Section from "@/components/section";
@@ -121,9 +122,9 @@ export default function StayDetailPage({ params }: { params: { slug: string } })
                             <div className="bg-secondary/30 p-8 rounded-2xl border">
                                 <h3 className="font-headline text-2xl text-primary">Details</h3>
                                 <ul className="mt-6 space-y-4">
-                                    <li className="flex items-center">
-                                        <span className="font-bold w-32">Guests:</span>
-                                        <span className="text-muted-foreground">{stay.max_guests} people</span>
+                                    <li className="flex items-center text-muted-foreground">
+                                        <Users className="w-5 h-5 mr-4 text-primary/70" />
+                                        <span>Up to {stay.max_guests_per_room} people</span>
                                     </li>
                                     <li className="flex items-center">
                                         <span className="font-bold w-32">Price:</span>
@@ -146,7 +147,7 @@ export default function StayDetailPage({ params }: { params: { slug: string } })
 
                                 <div className="mt-10 pt-6 border-t">
                                     <Button size="lg" className="w-full" asChild>
-                                        <Link href="/contact">Enquire About This Stay</Link>
+                                        <Link href="/book">Book This Stay</Link>
                                     </Button>
                                 </div>
                             </div>
@@ -164,3 +165,5 @@ export async function generateStaticParams() {
     slug: stay.slug,
   }));
 }
+
+    
