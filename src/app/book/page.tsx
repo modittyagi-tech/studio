@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect } from "react";
@@ -106,24 +107,38 @@ export default function BookPage() {
     const totalGuests = values.adults + values.children;
 
     try {
-      // Fake delay to simulate network request
-      await new Promise(resolve => setTimeout(resolve, 1500));
-
-      const { data: stays, error: staysError } = await supabase
+      // 1. Fetch all stays that can accommodate the number of guests.
+      const { data: potentialStays, error: staysError } = await supabase
         .from('stays')
         .select('*')
         .gte('max_guests', totalGuests);
 
       if (staysError) throw staysError;
-      if (!stays) {
+      if (!potentialStays) {
         setAvailableStays([]);
         setIsLoading(false);
         return;
       }
+      
+      const checkIn = values.dates.from.toISOString();
+      const checkOut = values.dates.to.toISOString();
 
-      // In a real app, you'd check for booking conflicts here.
-      // For now, we assume all stays are available if they meet capacity.
-      setAvailableStays(stays);
+      // 2. Fetch all bookings that overlap with the selected date range.
+      const { data: overlappingBookings, error: bookingsError } = await supabase
+        .from('bookings')
+        .select('stay_id')
+        .or(`(check_in.lte.${checkOut},check_out.gte.${checkIn})`);
+
+      if (bookingsError) throw bookingsError;
+
+      // 3. Filter out unavailable stays.
+      const bookedStayIds = overlappingBookings.map(b => b.stay_id);
+      const trulyAvailableStays = potentialStays.filter(stay => !bookedStayIds.includes(stay.id));
+      
+      // Fake delay to simulate network request
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      setAvailableStays(trulyAvailableStays);
 
     } catch (error: any) {
       console.error('Error fetching stays:', error);
@@ -141,7 +156,7 @@ export default function BookPage() {
     if (!selectedStay || !bookingDetails) return;
 
     try {
-      const { error } = await supabase.from('bookings').insert([
+      const { data, error } = await supabase.from('bookings').insert([
         {
           stay_id: selectedStay.id,
           check_in: bookingDetails.dates.from.toISOString(),
@@ -153,20 +168,26 @@ export default function BookPage() {
           phone: values.phone,
           status: 'pending', // In a real app, this would be confirmed after payment
         },
-      ]);
+      ]).select();
 
       if (error) throw error;
 
+      const bookingId = data ? data[0].id : null;
+
       toast({
         title: "Booking Request Sent!",
-        description: "We've received your request and will contact you shortly to confirm.",
+        description: `Your booking ID is ${bookingId}. We've received your request and will contact you shortly to confirm.`,
       });
       setIsBookingModalOpen(false);
       bookingForm.reset();
       // Reset the flow
       setSearchPerformed(false);
       setAvailableStays([]);
-      availabilityForm.reset();
+      availabilityForm.reset({
+        adults: 2,
+        children: 0,
+        dates: { from: new Date(), to: addDays(new Date(), 4) }
+      });
 
 
     } catch (error: any) {
@@ -507,3 +528,5 @@ if (typeof window !== 'undefined') {
     styleSheet.innerText = styles;
     document.head.appendChild(styleSheet);
 }
+
+    
