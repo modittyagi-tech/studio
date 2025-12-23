@@ -13,6 +13,7 @@ import { Badge } from "@/components/ui/badge"
 import { BookingStatus } from "@/lib/types"
 import { Button } from "@/components/ui/button"
 import { Check, X, Phone, Mail, User, BedDouble, Calendar, Hash } from "lucide-react"
+import { cn } from "@/lib/utils"
 
 const statusColors: Record<BookingStatus, string> = {
     pending: "bg-amber-500 hover:bg-amber-500/90",
@@ -68,7 +69,7 @@ export default async function BookingDetailPage({ params }: { params: { id: stri
                         <p className="text-lg font-semibold">{booking.stays?.name}</p>
                         <p className="text-muted-foreground text-sm">Requested on {format(new Date(booking.created_at), "PPP")}</p>
                      </div>
-                     <Badge className={statusColors[booking.status as BookingStatus]}>{booking.status}</Badge>
+                     <Badge className={cn(statusColors[booking.status as BookingStatus])}>{booking.status}</Badge>
                    </div>
                    
                    <div className="grid gap-2 text-sm">

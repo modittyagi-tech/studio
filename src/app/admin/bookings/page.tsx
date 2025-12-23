@@ -74,7 +74,7 @@ export default async function BookingsPage() {
                         {format(new Date(booking.check_in), "LLL dd, y")} - {format(new Date(booking.check_out), "LLL dd, y")}
                     </TableCell>
                     <TableCell>
-                      <Badge className={statusColors[booking.status as BookingStatus]}>
+                      <Badge className={cn(statusColors[booking.status as BookingStatus])}>
                         {booking.status}
                       </Badge>
                     </TableCell>
