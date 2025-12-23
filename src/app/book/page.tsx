@@ -6,7 +6,7 @@ import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { supabase } from "@/lib/supabase";
-import { Stay, Amenity } from "@/lib/types";
+import { Stay } from "@/lib/types";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -80,11 +80,19 @@ export default function BookPage() {
       children: 0,
       rooms: 1,
       dates: {
-        from: addDays(new Date(), 1),
-        to: addDays(new Date(), 5),
+        from: undefined,
+        to: undefined,
       }
     },
   });
+  
+  useEffect(() => {
+    availabilityForm.setValue('dates', {
+      from: addDays(new Date(), 1),
+      to: addDays(new Date(), 5),
+    });
+  }, [availabilityForm.setValue]);
+
 
   const bookingForm = useForm<z.infer<typeof bookingSchema>>({
     resolver: zodResolver(bookingSchema),
@@ -100,7 +108,7 @@ export default function BookPage() {
   const totalGuests = useMemo(() => {
     const values = availabilityForm.watch();
     return (values.adults || 0) + (values.children || 0);
-  }, [availabilityForm.watch('adults'), availabilityForm.watch('children')]);
+  }, [availabilityForm]);
 
 
   // Handler for the "Check Availability" button
@@ -140,14 +148,19 @@ export default function BookPage() {
             
             return {
                 ...mockStayData,
-                ...stayFromDb,
+                id: stayFromDb.id, // ensure we use the id from db
+                total_rooms: stayFromDb.total_rooms, // and total_rooms
                 available_rooms,
             };
         })
         .filter((stay): stay is AvailableStay => {
             if (!stay) return false;
-            return (stay.available_rooms >= values.rooms) &&
-                   (((stay.max_adults + stay.max_children) * values.rooms) >= (values.adults + values.children));
+            // Filter based on rooms required and guest capacity
+            const capacityPerRoom = stay.max_adults + stay.max_children;
+            const totalCapacity = capacityPerRoom * values.rooms;
+            const totalGuests = values.adults + values.children;
+
+            return stay.available_rooms >= values.rooms && totalCapacity >= totalGuests;
         });
 
       setAvailableStays(staysWithAvailability);
@@ -216,7 +229,7 @@ export default function BookPage() {
   }
 
   const nights = searchParams?.dates.from && searchParams?.dates.to ? differenceInDays(searchParams.dates.to, searchParams.dates.from) : 0;
-
+  
   if (!hasMounted) {
     return (
       <div className="flex justify-center items-center min-h-screen">
@@ -258,8 +271,8 @@ export default function BookPage() {
   }
 
   if (selectedStay && searchParams) {
+    const heroImage = PlaceHolderImages.find(i => i.id === (selectedStay.images && selectedStay.images.length > 0 ? selectedStay.images[0] : '')) || {imageUrl: `https://picsum.photos/seed/${selectedStay.id}/800/600`, imageHint: selectedStay.name, description: selectedStay.name};
     const totalPrice = nights * selectedStay.price_per_night * searchParams.rooms;
-    const heroImage = PlaceHolderImages.find(i => i.id === (stay.images && stay.images.length > 0 ? stay.images[0] : ''));
     return (
         <div className="bg-background">
             <PageHeader title="Complete Your Booking" description={`You're just a few steps away from securing your stay at ${selectedStay.name}.`}/>

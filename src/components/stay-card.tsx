@@ -41,7 +41,7 @@ export function StayCard({ stay }: { stay: Stay }) {
             <div className="mt-4 flex items-center space-x-6 text-sm text-muted-foreground">
                 <div className="flex items-center">
                     <Users className="h-4 w-4 mr-2 text-primary/70" />
-                    <span>{max_guests_per_room} guests</span>
+                    <span>{max_guests_per_room} guests per room</span>
                 </div>
             </div>
             <div className="mt-6 pt-4 border-t flex justify-between items-center">
