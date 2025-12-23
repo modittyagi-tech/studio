@@ -3,7 +3,7 @@ import { PageHeader } from "@/components/page-header";
 export default function TermsAndConditionsPage() {
     return (
         <div>
-            <PageHeader title="Terms & Conditions" />
+            <PageHeader title="Terms & Conditions" description="The rules and regulations for the use of our website and services." />
             <div className="container max-w-4xl py-16 prose prose-lg prose-p:text-muted-foreground/90 prose-h2:font-headline prose-h2:text-primary prose-h2:text-3xl">
                 <p className="text-sm text-muted-foreground">Last updated: July 2024</p>
 

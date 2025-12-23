@@ -3,7 +3,7 @@ import { PageHeader } from "@/components/page-header";
 export default function PrivacyPolicyPage() {
     return (
         <div>
-            <PageHeader title="Privacy Policy" />
+            <PageHeader title="Privacy Policy" description="Your privacy matters to us. Here’s how we collect and protect your information." />
             <div className="container max-w-4xl py-16 prose prose-lg prose-p:text-muted-foreground/90 prose-h2:font-headline prose-h2:text-primary prose-h2:text-3xl">
                 <p className="text-sm text-muted-foreground">Last updated: July 2024</p>
                 

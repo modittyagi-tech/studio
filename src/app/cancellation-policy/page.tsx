@@ -3,12 +3,12 @@ import { PageHeader } from "@/components/page-header";
 export default function CancellationPolicyPage() {
     return (
         <div>
-            <PageHeader title="Cancellation Policy" />
+            <PageHeader title="Cancellation Policy" description="We understand that plans can change. Please read our policy carefully." />
             <div className="container max-w-4xl py-16 prose prose-lg prose-p:text-muted-foreground/90 prose-h2:font-headline prose-h2:text-primary prose-h2:text-3xl">
                 <p className="text-sm text-muted-foreground">Last updated: July 2024</p>
                 
                 <p>
-                    We understand that plans can change. Our cancellation policy is designed to be as fair as possible while protecting our ability to operate. Please read it carefully before booking.
+                    Our cancellation policy is designed to be as fair as possible while protecting our ability to operate. Please read it carefully before booking.
                 </p>
 
                 <h2>Standard Cancellation</h2>
