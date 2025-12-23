@@ -61,7 +61,7 @@ export default function AboutPage() {
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
-                        transition={{ duration: 0.8, ease: "easeOut" }}
+                        transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
                     >
                         {storyImage && (
                              <div className="aspect-[4/3] rounded-xl overflow-hidden shadow-lg">
@@ -108,7 +108,7 @@ export default function AboutPage() {
                                 initial={{ opacity: 0, y: 20 }}
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true }}
-                                transition={{ duration: 0.8, ease: "easeOut" }}
+                                transition={{ duration: 0.8, ease: "easeOut", delay: index * 0.1 }}
                             >
                                 <div className="flex justify-center mb-4">
                                     <value.icon className="w-10 h-10 text-primary/70" />
@@ -138,7 +138,7 @@ export default function AboutPage() {
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
-                        transition={{ duration: 0.8, ease: "easeOut" }}
+                        transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
                         className="mt-12"
                     >
                         {locationImage && (
