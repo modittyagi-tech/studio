@@ -140,21 +140,11 @@ export default function BookPage() {
 
         if (error) throw error;
         
-        const staysWithAvailability: AvailableStay[] = availableData
-          .map((stay: any) => {
-              const mock = mockStays.find(m => m.id === stay.id);
-              if (!mock) return null;
-              return {
-                  ...mock, // Get images, descriptions etc. from mock
-                  ...stay, // Get live availability from supabase
-              } as AvailableStay
-          })
-          .filter(Boolean) // Filter out any null values
-          .filter((stay: AvailableStay) => {
-              const fitsGuests = ((stay.max_adults + stay.max_children) * values.rooms) >= (values.adults + values.children);
-              const hasRooms = stay.available_rooms >= values.rooms;
-              return fitsGuests && hasRooms;
-          });
+        const staysWithAvailability: AvailableStay[] = availableData.filter((stay: any) => {
+            const fitsGuests = ((stay.max_adults + stay.max_children) * values.rooms) >= (values.adults + values.children);
+            const hasRooms = stay.available_rooms >= values.rooms;
+            return fitsGuests && hasRooms;
+        });
         
         setAvailableStays(staysWithAvailability);
         setStep("results");
@@ -594,3 +584,5 @@ function GuestInputControl({ form, name, label, min }: { form: any, name: "adult
         </div>
     )
 }
+
+    
