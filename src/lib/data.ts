@@ -64,6 +64,7 @@ export const mockTestimonials: Testimonial[] = [
 ];
 
 export const navLinks: NavLink[] = [
+    { href: '/', label: 'Home' },
     { href: '/stays', label: 'Stays' },
     { href: '/experience', label: 'Experience' },
     { href: '/gallery', label: 'Gallery' },
