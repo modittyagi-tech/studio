@@ -1,7 +1,8 @@
+
 "use client";
 
 import { useState } from "react";
-import { useForm, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { supabase } from "@/lib/supabase";
@@ -22,7 +23,7 @@ import { StayCard } from "@/components/stay-card";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { CalendarIcon } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
-import { format } from "date-fns";
+import { addDays, format, isAfter } from "date-fns";
 import { cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
 import {
@@ -30,17 +31,21 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogDescription
+  DialogDescription,
+  DialogFooter
 } from "@/components/ui/dialog";
+import type { DateRange } from "react-day-picker";
 
 const availabilitySchema = z.object({
-  checkIn: z.date({ required_error: "Check-in date is required." }),
-  checkOut: z.date({ required_error: "Check-out date is required." }),
+  dates: z.object({
+    from: z.date({ required_error: "Check-in date is required." }),
+    to: z.date({ required_error: "Check-out date is required." }),
+  }),
   adults: z.coerce.number().min(1, "At least one adult is required."),
   children: z.coerce.number().min(0).default(0),
-}).refine(data => data.checkOut > data.checkIn, {
+}).refine(data => data.dates.to && data.dates.from && isAfter(data.dates.to, data.dates.from), {
   message: "Check-out date must be after check-in date.",
-  path: ["checkOut"],
+  path: ["dates"],
 });
 
 const bookingSchema = z.object({
@@ -65,6 +70,10 @@ export default function BookPage() {
     defaultValues: {
       adults: 1,
       children: 0,
+      dates: {
+        from: new Date(),
+        to: addDays(new Date(), 4),
+      }
     },
   });
 
@@ -86,16 +95,26 @@ export default function BookPage() {
     const totalGuests = values.adults + values.children;
 
     try {
-      const { data: stays, error } = await supabase
+      const { data: stays, error: staysError } = await supabase
         .from('stays')
         .select('*')
         .gte('max_guests', totalGuests);
 
-      if (error) throw error;
+      if (staysError) throw staysError;
+
+      // Find which of these stays have conflicting bookings
+      const { data: bookings, error: bookingsError } = await supabase
+        .from('bookings')
+        .select('stay_id')
+        .in('stay_id', stays.map(s => s.id))
+        .or(`[check_in,check_out).overlaps.[${values.dates.from.toISOString()},${values.dates.to.toISOString()})`);
+        
+      if (bookingsError) throw bookingsError;
+
+      const conflictingStayIds = new Set(bookings.map(b => b.stay_id));
+      const filteredStays = stays.filter(stay => !conflictingStayIds.has(stay.id));
       
-      // In a real app, you would also check for booking conflicts in the 'bookings' table
-      // For this example, we are only filtering by guest count.
-      setAvailableStays(stays || []);
+      setAvailableStays(filteredStays || []);
 
     } catch (error: any) {
       console.error('Error fetching stays:', error);
@@ -116,8 +135,8 @@ export default function BookPage() {
       const { error } = await supabase.from('bookings').insert([
         {
           stay_id: selectedStay.id,
-          check_in: bookingDetails.checkIn.toISOString(),
-          check_out: bookingDetails.checkOut.toISOString(),
+          check_in: bookingDetails.dates.from.toISOString(),
+          check_out: bookingDetails.dates.to.toISOString(),
           adults: bookingDetails.adults,
           children: bookingDetails.children,
           name: values.name,
@@ -151,7 +170,6 @@ export default function BookPage() {
     setIsBookingModalOpen(true);
   };
 
-
   return (
     <>
       <PageHeader
@@ -162,78 +180,48 @@ export default function BookPage() {
         <div className="max-w-5xl mx-auto">
           <div className="bg-card border rounded-2xl p-6 md:p-8">
             <Form {...availabilityForm}>
-              <form onSubmit={availabilityForm.handleSubmit(onCheckAvailability)} className="grid md:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-6 items-end">
+              <form onSubmit={availabilityForm.handleSubmit(onCheckAvailability)} className="grid md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 items-end">
+                
                 <FormField
                   control={availabilityForm.control}
-                  name="checkIn"
+                  name="dates"
                   render={({ field }) => (
-                    <FormItem className="flex flex-col">
-                      <FormLabel>Check-in</FormLabel>
+                    <FormItem className="flex flex-col lg:col-span-2">
+                      <FormLabel>Check-in - Check-out</FormLabel>
                       <Popover>
                         <PopoverTrigger asChild>
-                          <FormControl>
-                            <Button
-                              variant={"outline"}
-                              className={cn(
-                                "w-full pl-3 text-left font-normal",
-                                !field.value && "text-muted-foreground"
-                              )}
-                            >
-                              {field.value ? (
-                                format(field.value, "PPP")
+                          <Button
+                            id="date"
+                            variant={"outline"}
+                            className={cn(
+                              "w-full justify-start text-left font-normal h-11",
+                              !field.value.from && "text-muted-foreground"
+                            )}
+                          >
+                            <CalendarIcon className="mr-2 h-4 w-4" />
+                            {field.value?.from ? (
+                              field.value.to ? (
+                                <>
+                                  {format(field.value.from, "LLL dd, y")} -{" "}
+                                  {format(field.value.to, "LLL dd, y")}
+                                </>
                               ) : (
-                                <span>Pick a date</span>
-                              )}
-                              <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                            </Button>
-                          </FormControl>
+                                format(field.value.from, "LLL dd, y")
+                              )
+                            ) : (
+                              <span>Pick a date</span>
+                            )}
+                          </Button>
                         </PopoverTrigger>
                         <PopoverContent className="w-auto p-0" align="start">
                           <Calendar
-                            mode="single"
-                            selected={field.value}
-                            onSelect={field.onChange}
-                            disabled={(date) => date < new Date(new Date().setHours(0,0,0,0))}
                             initialFocus
-                          />
-                        </PopoverContent>
-                      </Popover>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                 <FormField
-                  control={availabilityForm.control}
-                  name="checkOut"
-                  render={({ field }) => (
-                    <FormItem className="flex flex-col">
-                      <FormLabel>Check-out</FormLabel>
-                       <Popover>
-                        <PopoverTrigger asChild>
-                          <FormControl>
-                            <Button
-                              variant={"outline"}
-                              className={cn(
-                                "w-full pl-3 text-left font-normal",
-                                !field.value && "text-muted-foreground"
-                              )}
-                            >
-                              {field.value ? (
-                                format(field.value, "PPP")
-                              ) : (
-                                <span>Pick a date</span>
-                              )}
-                              <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                            </Button>
-                          </FormControl>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-auto p-0" align="start">
-                          <Calendar
-                            mode="single"
-                            selected={field.value}
+                            mode="range"
+                            defaultMonth={field.value.from}
+                            selected={field.value as DateRange}
                             onSelect={field.onChange}
+                            numberOfMonths={2}
                             disabled={(date) => date < new Date(new Date().setHours(0,0,0,0))}
-                            initialFocus
                           />
                         </PopoverContent>
                       </Popover>
@@ -248,7 +236,7 @@ export default function BookPage() {
                     <FormItem>
                       <FormLabel>Adults</FormLabel>
                       <FormControl>
-                        <Input type="number" min="1" {...field} />
+                        <Input type="number" min="1" {...field} className="h-11"/>
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -261,13 +249,13 @@ export default function BookPage() {
                     <FormItem>
                       <FormLabel>Children</FormLabel>
                       <FormControl>
-                        <Input type="number" min="0" {...field} />
+                        <Input type="number" min="0" {...field} className="h-11" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
-                <Button type="submit" size="lg" disabled={isLoading} className="w-full h-11">
+                <Button type="submit" size="lg" disabled={isLoading} className="w-full h-11 lg:col-start-4">
                   {isLoading ? "Searching..." : "Check Availability"}
                 </Button>
               </form>
@@ -276,7 +264,7 @@ export default function BookPage() {
         </div>
       </Section>
 
-      <div className="bg-secondary/30">
+      <div className="bg-secondary/30 min-h-[400px]">
         <Section>
             {isLoading && <div className="text-center text-muted-foreground">Searching for available stays...</div>}
             
@@ -306,15 +294,17 @@ export default function BookPage() {
       </div>
 
        <Dialog open={isBookingModalOpen} onOpenChange={setIsBookingModalOpen}>
-        <DialogContent className="sm:max-w-[425px]">
+        <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle>Book: {selectedStay?.name}</DialogTitle>
-            <DialogDescription>
-              Please provide your details to request the booking. We will contact you to confirm.
-            </DialogDescription>
+            {bookingDetails && (
+              <DialogDescription>
+                {format(bookingDetails.dates.from, "PPP")} to {format(bookingDetails.dates.to, "PPP")}
+              </DialogDescription>
+            )}
           </DialogHeader>
           <Form {...bookingForm}>
-            <form onSubmit={bookingForm.handleSubmit(onBookStay)} className="space-y-4 pt-4">
+            <form onSubmit={bookingForm.handleSubmit(onBookStay)} className="space-y-4">
               <FormField
                 control={bookingForm.control}
                 name="name"
@@ -354,11 +344,11 @@ export default function BookPage() {
                   </FormItem>
                 )}
               />
-              <div className="pt-6">
+              <DialogFooter className="pt-4">
                 <Button type="submit" className="w-full" disabled={bookingForm.formState.isSubmitting}>
                   {bookingForm.formState.isSubmitting ? "Submitting..." : "Submit Booking Request"}
                 </Button>
-              </div>
+              </DialogFooter>
             </form>
           </Form>
         </DialogContent>
@@ -366,3 +356,5 @@ export default function BookPage() {
     </>
   );
 }
+
+    
