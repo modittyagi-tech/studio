@@ -216,17 +216,27 @@ export default function BookPage() {
   if (step === 'confirmation' && finalBookingId) {
     return (
         <div className="bg-background">
-            <PageHeader title="Booking Confirmed!" description="Your escape is officially on the calendar."/>
+            <PageHeader title="Booking Request Received" description="Your escape is one step closer."/>
             <section className="py-16 md:py-24">
                 <div className="container max-w-3xl text-center">
                     <MotionDiv initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="bg-secondary/30 border rounded-2xl p-8 md:p-12">
                         <h2 className="font-headline text-3xl text-primary">Thank You, {bookingForm.getValues('guest_name')}!</h2>
-                        <p className="text-muted-foreground mt-4 text-lg">
-                            We've received your booking request and a confirmation email is on its way to you.
+                        <p className="text-muted-foreground mt-4 text-lg max-w-xl mx-auto">
+                           Your booking request has been successfully submitted. Our team will review the details and contact you shortly to confirm availability.
                         </p>
+                        
                         <div className="mt-8 text-left bg-card p-6 rounded-lg border">
-                            <p className="text-sm text-muted-foreground">Your Booking ID</p>
-                            <p className="font-mono text-primary text-lg font-bold">{finalBookingId}</p>
+                            <div className="flex justify-between items-center">
+                                <div>
+                                    <p className="text-sm text-muted-foreground">Booking Reference</p>
+                                    <p className="font-mono text-primary text-base font-bold">{finalBookingId}</p>
+                                </div>
+                                <div className="text-right">
+                                    <p className="text-sm text-muted-foreground">Status</p>
+                                    <p className="font-bold text-amber-600">Pending Confirmation</p>
+                                </div>
+                            </div>
+
                             <div className="mt-6 border-t pt-6 space-y-3">
                                 <div className="flex justify-between items-center"><span className="text-muted-foreground">Stay:</span><span className="font-bold">{selectedStay?.name}</span></div>
                                 <div className="flex justify-between items-center"><span className="text-muted-foreground">Check-in:</span><span className="font-bold">{searchParams?.dates.from && format(searchParams.dates.from, "PPP")}</span></div>
@@ -234,7 +244,18 @@ export default function BookPage() {
                                 <div className="flex justify-between items-center"><span className="text-muted-foreground">Guests:</span><span className="font-bold">{totalGuests}</span></div>
                                 <div className="flex justify-between items-center"><span className="text-muted-foreground">Rooms:</span><span className="font-bold">{searchParams?.rooms}</span></div>
                             </div>
+                             <p className="text-xs text-muted-foreground/80 mt-4 text-center">Please keep this reference for future communication.</p>
                         </div>
+                        
+                        <div className="mt-12 text-left">
+                            <h3 className="font-headline text-2xl text-primary text-center mb-4">What happens next?</h3>
+                            <ul className="space-y-3 text-muted-foreground list-disc list-inside bg-card p-6 rounded-lg border">
+                                <li>Our team will carefully review your request against our current availability.</li>
+                                <li>You will receive a confirmation email once your booking is approved, typically within a few hours.</li>
+                                <li>A member of our hospitality team may contact you directly if there are any questions or issues with your request.</li>
+                            </ul>
+                        </div>
+
                          <Button asChild size="lg" className="mt-10">
                             <a href="/">Back to Home</a>
                          </Button>
@@ -445,8 +466,8 @@ export default function BookPage() {
       </section>
 
       <div className="bg-background">
-          {searchPerformed ? (
-            <div className="bg-secondary/30 min-h-[500px] py-16 md:py-24 flex items-center justify-center">
+          <div className="min-h-[500px] py-16 md:py-24 flex items-center justify-center">
+            {searchPerformed ? (
                 <div className="container max-w-6xl text-center">
                     {isLoading && (
                         <div className="flex flex-col items-center text-center text-muted-foreground">
@@ -470,14 +491,14 @@ export default function BookPage() {
                     )}
                     
                     {step === 'results' && !isLoading && availableStays.length > 0 && (
-                         <div className="space-y-12">
+                         <div className="space-y-12 bg-secondary/30 py-16 md:py-24 -m-6 rounded-2xl">
                             <MotionDiv initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
                                 <h2 className="font-headline text-center text-4xl md:text-5xl text-primary">Available Stays</h2>
                                 <p className="mt-2 text-center text-muted-foreground">
                                     {searchParams?.dates.from && format(searchParams.dates.from, 'PPP')} - {searchParams?.dates.to && format(searchParams.dates.to, 'PPP')} ({nights} nights)
                                 </p>
                             </MotionDiv>
-                            <div className="grid md:grid-cols-1 gap-8">
+                            <div className="grid md:grid-cols-1 gap-8 container max-w-6xl">
                                 {availableStays.map((stay, index) => {
                                      const image = {imageUrl: `https://picsum.photos/seed/${stay.id}/800/600`, imageHint: stay.name, description: stay.name};
                                      const totalPrice = nights * stay.price_per_night * searchParams!.rooms;
@@ -516,36 +537,36 @@ export default function BookPage() {
                         </div>
                     )}
                 </div>
-            </div>
-          ) : (
-            <Section className="py-24">
-                <div className="text-center">
-                    <h2 className="font-headline text-3xl md:text-4xl text-primary">Your Journey to Tranquility</h2>
-                    <p className="mt-4 max-w-2xl mx-auto text-lg text-muted-foreground">
-                        Booking your luxury escape is simple and secure.
-                    </p>
-                </div>
-                <div className="mt-16 max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12 text-center">
-                    {bookingSteps.map((step, index) => (
-                        <MotionDiv
-                            key={index}
-                            initial={{ opacity: 0, y: 20 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 0.5, delay: index * 0.1 }}
-                        >
-                            <div className="flex justify-center mb-4">
-                                <div className="bg-primary/10 rounded-full p-4 border-2 border-primary/20">
-                                    <step.icon className="w-8 h-8 text-primary" />
+            ) : (
+                <Section className="py-24">
+                    <div className="text-center">
+                        <h2 className="font-headline text-3xl md:text-4xl text-primary">Your Journey to Tranquility</h2>
+                        <p className="mt-4 max-w-2xl mx-auto text-lg text-muted-foreground">
+                            Booking your luxury escape is simple and secure.
+                        </p>
+                    </div>
+                    <div className="mt-16 max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12 text-center">
+                        {bookingSteps.map((step, index) => (
+                            <MotionDiv
+                                key={index}
+                                initial={{ opacity: 0, y: 20 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true }}
+                                transition={{ duration: 0.5, delay: index * 0.1 }}
+                            >
+                                <div className="flex justify-center mb-4">
+                                    <div className="bg-primary/10 rounded-full p-4 border-2 border-primary/20">
+                                        <step.icon className="w-8 h-8 text-primary" />
+                                    </div>
                                 </div>
-                            </div>
-                            <h3 className="font-headline text-2xl">{step.title}</h3>
-                            <p className="mt-2 text-muted-foreground/90">{step.description}</p>
-                        </MotionDiv>
-                    ))}
-                </div>
-            </Section>
-          )}
+                                <h3 className="font-headline text-2xl">{step.title}</h3>
+                                <p className="mt-2 text-muted-foreground/90">{step.description}</p>
+                            </MotionDiv>
+                        ))}
+                    </div>
+                </Section>
+            )}
+          </div>
       </div>
     </div>
   );
@@ -582,7 +603,5 @@ function GuestInputControl({ form, name, label, min }: { form: any, name: "adult
         </div>
     )
 }
-
-    
 
     
