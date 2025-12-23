@@ -8,7 +8,7 @@ import { PlaceHolderImages } from "@/lib/placeholder-images";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { Heart, Leaf, Mountain, Moon } from "lucide-react";
+import { Heart, Leaf, Mountain } from "lucide-react";
 
 const values = [
     {
@@ -17,7 +17,7 @@ const values = [
         description: "Our spaces are designed to blend seamlessly with the landscape, respecting the environment that hosts us.",
     },
     {
-        icon: Moon,
+        icon: Mountain,
         title: "Quiet & Seclusion",
         description: "We believe true luxury is uninterrupted peace, offering you a private sanctuary to disconnect and recharge.",
     },
