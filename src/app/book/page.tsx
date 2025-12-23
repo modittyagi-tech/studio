@@ -101,6 +101,11 @@ export default function BookPage() {
         .gte('max_guests', totalGuests);
 
       if (staysError) throw staysError;
+      if (!stays) {
+        setAvailableStays([]);
+        setIsLoading(false);
+        return;
+      }
 
       // Find which of these stays have conflicting bookings
       const { data: bookings, error: bookingsError } = await supabase
@@ -178,7 +183,7 @@ export default function BookPage() {
       />
       <Section>
         <div className="max-w-5xl mx-auto">
-          <div className="bg-card border rounded-2xl p-6 md:p-8">
+          <div className="bg-card border rounded-2xl p-6 md:p-8 shadow-lg">
             <Form {...availabilityForm}>
               <form onSubmit={availabilityForm.handleSubmit(onCheckAvailability)} className="grid md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 items-end">
                 
@@ -255,7 +260,7 @@ export default function BookPage() {
                     </FormItem>
                   )}
                 />
-                <Button type="submit" size="lg" disabled={isLoading} className="w-full h-11 lg:col-start-4">
+                <Button type="submit" size="lg" disabled={isLoading} className="w-full h-11 lg:col-span-4 bg-primary text-primary-foreground hover:bg-primary/90">
                   {isLoading ? "Searching..." : "Check Availability"}
                 </Button>
               </form>
@@ -356,5 +361,3 @@ export default function BookPage() {
     </>
   );
 }
-
-    

@@ -1,3 +1,4 @@
+
 import type { Stay, Testimonial, NavLink } from './types';
 
 export const mockStays: Stay[] = [
@@ -61,7 +62,7 @@ export const navLinks: NavLink[] = [
     { href: '/experience', label: 'Experience' },
     { href: '/gallery', label: 'Gallery' },
     { href: '/about', label: 'About' },
-    { href: '/book', label: 'Book Now' },
+    { href: '/book', label: 'Book' },
     { href: '/contact', label: 'Contact' },
 ];
 
