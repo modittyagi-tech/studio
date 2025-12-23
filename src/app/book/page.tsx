@@ -94,7 +94,7 @@ export default function BookPage() {
             to: addDays(new Date(), 4),
         }
     });
-  }, []);
+  }, [availabilityForm]);
 
 
   async function onCheckAvailability(values: z.infer<typeof availabilitySchema>) {
