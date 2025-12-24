@@ -14,11 +14,11 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useState } from "react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { createClient } from "@/utils/supabase/client";
 
 const formSchema = z.object({
   email: z.string().email({ message: "Invalid email address." }),
@@ -27,8 +27,8 @@ const formSchema = z.object({
 
 export function LoginForm() {
   const [error, setError] = useState<string | null>(null);
-  const supabase = createClientComponentClient();
   const router = useRouter();
+  const supabase = createClient();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -50,8 +50,8 @@ export function LoginForm() {
     if (error) {
       setError(error.message);
     } else {
-      // Using router.push() and router.refresh() is the standard way with app router
-      // to navigate and ensure the new session is picked up by the server layout.
+      // Use the Next.js router to navigate and refresh the page.
+      // This ensures the server-side layout re-evaluates the session.
       router.push("/admin/dashboard");
       router.refresh();
     }
