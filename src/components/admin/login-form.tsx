@@ -18,6 +18,7 @@ import { useState } from "react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
 import { createClient } from "@/utils/supabase/client";
+import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
   email: z.string().email({ message: "Invalid email address." }),
@@ -27,6 +28,7 @@ const formSchema = z.object({
 export function LoginForm() {
   const [error, setError] = useState<string | null>(null);
   const supabase = createClient();
+  const router = useRouter();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -39,6 +41,7 @@ export function LoginForm() {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setError(null);
     form.clearErrors();
+    form.control.register('root.serverError');
 
     const { error } = await supabase.auth.signInWithPassword({
       email: values.email,
@@ -48,10 +51,10 @@ export function LoginForm() {
     if (error) {
       setError(error.message);
     } else {
-      // IMPORTANT: A full page refresh is required to ensure the server
-      // re-evaluates the session cookie and the protected layout can
-      // grant access. This is the correct pattern for App Router.
-      window.location.href = "/admin/dashboard";
+      // After successful sign-in, the middleware will detect the session
+      // on the next navigation and handle the redirect.
+      // We just need to trigger a refresh/navigation.
+      router.refresh();
     }
   }
 
@@ -100,4 +103,3 @@ export function LoginForm() {
     </Form>
   );
 }
-

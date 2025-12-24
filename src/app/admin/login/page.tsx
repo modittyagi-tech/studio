@@ -1,39 +1,18 @@
+
 "use client";
 
-import { useEffect, useState } from 'react';
 import { createClient } from '@/utils/supabase/client';
-import { useRouter } from 'next/navigation';
 import { LoginForm } from '@/components/admin/login-form';
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { Skeleton } from '@/components/ui/skeleton';
 
 export default function LoginPage() {
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
   const supabase = createClient();
 
-  useEffect(() => {
-    const checkSession = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session) {
-        // If there's a session, check if the user is an admin.
-        // Note: This is a client-side check for UX improvement.
-        // The definitive security check is always on the server in the protected layout.
-        const { data: profile } = await supabase
-          .from('profiles')
-          .select('role')
-          .eq('id', session.user.id)
-          .single();
-
-        if (profile?.role === 'admin') {
-          router.replace('/admin/dashboard');
-          return; // Early exit to prevent flicker
-        }
-      }
-      setLoading(false);
-    };
-
-    checkSession();
-  }, [supabase, router]);
+  // We no longer need the useEffect to check session, middleware handles it.
 
   if (loading) {
     return (
