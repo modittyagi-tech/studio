@@ -18,7 +18,6 @@ import { createClient } from "@/utils/supabase/client";
 import { useState } from "react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
-import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
   email: z.string().email({ message: "Invalid email address." }),
@@ -28,7 +27,6 @@ const formSchema = z.object({
 export function LoginForm() {
   const [error, setError] = useState<string | null>(null);
   const supabase = createClient();
-  const router = useRouter();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -40,6 +38,8 @@ export function LoginForm() {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setError(null);
+    form.clearErrors();
+
     const { error } = await supabase.auth.signInWithPassword({
       email: values.email,
       password: values.password,
@@ -48,10 +48,8 @@ export function LoginForm() {
     if (error) {
       setError(error.message);
     } else {
-      // On successful login, refresh the page to ensure the new session is
-      // recognized by the server-side auth guard, then redirect to the dashboard.
-      router.refresh();
-      router.replace('/admin/dashboard');
+      // Hard redirect to force a new session to be loaded by the server
+      window.location.href = "/admin/dashboard";
     }
   }
 
@@ -61,7 +59,7 @@ export function LoginForm() {
         {error && (
             <Alert variant="destructive">
                 <AlertCircle className="h-4 w-4" />
-                <AlertTitle>Error</AlertTitle>
+                <AlertTitle>Login Failed</AlertTitle>
                 <AlertDescription>{error}</AlertDescription>
             </Alert>
         )}

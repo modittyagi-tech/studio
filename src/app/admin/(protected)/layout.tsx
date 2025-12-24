@@ -15,28 +15,23 @@ export default async function AdminProtectedLayout({
     data: { user },
   } = await supabase.auth.getUser();
 
-  // 1. If no user session, redirect to login
   if (!user) {
     redirect("/admin/login");
   }
 
-  // 2. If user exists, check for admin role in 'profiles' table
   const { data: profile } = await supabase
     .from("profiles")
     .select("role")
     .eq("id", user.id)
     .single();
 
-  // 3. If profile is not found or role is not admin, redirect to login.
-  // This is the primary security guard for the entire admin section.
-  // It's good practice to sign out the user if they are not an admin
-  // but are trying to access admin routes.
   if (profile?.role !== "admin") {
+    // It's good practice to sign out the user if they are not an admin
+    // but are trying to access admin routes.
     await supabase.auth.signOut();
     redirect("/admin/login");
   }
   
-  // If all checks pass, render the admin layout with the user's data
   return (
     <div className="flex min-h-screen w-full flex-col bg-muted/40">
       <AdminSidebar />
