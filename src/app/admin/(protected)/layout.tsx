@@ -29,7 +29,7 @@ export default async function AdminProtectedLayout({
 
   // If the user has no profile or is not an admin, redirect them.
   if (profile?.role !== 'admin') {
-    // You might want to sign them out here before redirecting.
+    // You can sign them out before redirecting if you want to be extra secure.
     // await supabase.auth.signOut();
     redirect("/admin/login?error=access-denied");
   }
