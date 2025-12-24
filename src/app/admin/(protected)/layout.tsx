@@ -19,19 +19,6 @@ export default async function AdminProtectedLayout({
   if (!session) {
     redirect("/admin/login");
   }
-
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("role")
-    .eq("id", session.user.id)
-    .single();
-
-  if (profile?.role !== "admin") {
-    // It's good practice to sign out the user if they are not an admin
-    // but are trying to access admin routes.
-    await supabase.auth.signOut();
-    redirect("/admin/login");
-  }
   
   return (
     <div className="flex min-h-screen w-full flex-col bg-muted/40">
