@@ -7,7 +7,7 @@ import {
   BedDouble,
   BookCopy,
   PanelLeft,
-  Search,
+  Image,
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -18,13 +18,12 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
   Sheet,
   SheetContent,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { createClient } from '@/utils/supabase/client'
+import { createClient } from '@/utils/supabase/client';
 import { useRouter } from 'next/navigation';
 import { User } from "@supabase/supabase-js";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
@@ -34,6 +33,7 @@ const navItems = [
     { href: "/admin/dashboard", icon: Home, label: "Dashboard" },
     { href: "/admin/bookings", icon: BookCopy, label: "Bookings" },
     { href: "/admin/stays", icon: BedDouble, label: "Stays" },
+    { href: "/admin/image-harmonizer", icon: Image, label: "AI Tools" },
 ];
 
 export function AdminHeader({ user }: { user: User }) {

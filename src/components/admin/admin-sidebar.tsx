@@ -8,7 +8,7 @@ import {
   TooltipTrigger,
   TooltipProvider,
 } from "@/components/ui/tooltip";
-import { Home, BedDouble, BookCopy, Settings } from "lucide-react";
+import { Home, BedDouble, BookCopy, Settings, Image } from "lucide-react";
 import { Logo } from "../logo";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
@@ -17,6 +17,7 @@ const navItems = [
     { href: "/admin/dashboard", icon: Home, label: "Dashboard" },
     { href: "/admin/bookings", icon: BookCopy, label: "Bookings" },
     { href: "/admin/stays", icon: BedDouble, label: "Stays" },
+    { href: "/admin/image-harmonizer", icon: Image, label: "AI Tools" },
 ];
 
 export function AdminSidebar() {

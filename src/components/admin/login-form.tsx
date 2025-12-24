@@ -50,8 +50,9 @@ export function LoginForm() {
     if (error) {
       setError(error.message);
     } else {
-      // Use the Next.js router to navigate and refresh the page.
-      // This ensures the server-side layout re-evaluates the session.
+      // Use router.push() to navigate.
+      // Then use router.refresh() to force a server-side rerender of the new route.
+      // This ensures the protected layout re-evaluates the session cookie.
       router.push("/admin/dashboard");
       router.refresh();
     }
