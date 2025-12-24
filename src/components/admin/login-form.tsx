@@ -17,7 +17,6 @@ import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { createClient } from "@/utils/supabase/client";
 
 const formSchema = z.object({
@@ -27,7 +26,6 @@ const formSchema = z.object({
 
 export function LoginForm() {
   const [error, setError] = useState<string | null>(null);
-  const router = useRouter();
   const supabase = createClient();
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -50,11 +48,10 @@ export function LoginForm() {
     if (error) {
       setError(error.message);
     } else {
-      // Use router.push() to navigate.
-      // Then use router.refresh() to force a server-side rerender of the new route.
-      // This ensures the protected layout re-evaluates the session cookie.
-      router.push("/admin/dashboard");
-      router.refresh();
+      // IMPORTANT: A full page refresh is required to ensure the server
+      // re-evaluates the session cookie and the protected layout can
+      // grant access. This is the correct pattern for App Router.
+      window.location.href = "/admin/dashboard";
     }
   }
 
@@ -103,3 +100,4 @@ export function LoginForm() {
     </Form>
   );
 }
+
