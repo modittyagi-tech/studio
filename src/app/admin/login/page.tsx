@@ -6,13 +6,27 @@ import { LoginForm } from '@/components/admin/login-form';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Skeleton } from '@/components/ui/skeleton';
+import { User } from '@supabase/supabase-js';
 
 export default function LoginPage() {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const router = useRouter();
   const supabase = createClient();
 
-  // We no longer need the useEffect to check session, middleware handles it.
+  useEffect(() => {
+    const checkSession = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        // If user is already logged in, redirect them to the dashboard.
+        // This prevents logged-in users from seeing the login page.
+        router.replace('/admin/dashboard');
+      } else {
+        setLoading(false);
+      }
+    };
+
+    checkSession();
+  }, [router, supabase.auth]);
 
   if (loading) {
     return (

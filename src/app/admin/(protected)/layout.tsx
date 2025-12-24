@@ -16,20 +16,25 @@ export default async function AdminProtectedLayout({
     data: { user },
   } = await supabase.auth.getUser();
 
+  // This is the single source of truth for protecting admin routes.
+  // 1. Check if a user is logged in.
   if (!user) {
     redirect('/admin/login');
   }
 
+  // 2. Check if the logged-in user is an admin.
   const { data: profile } = await supabase
     .from('profiles')
     .select('is_admin')
     .eq('id', user.id)
     .single();
 
+  // 3. If they are not an admin, redirect them to the homepage.
   if (!profile?.is_admin) {
     redirect('/');
   }
 
+  // If all checks pass, render the admin layout with the user object.
   return (
     <div className="flex min-h-screen w-full bg-background">
       <AdminSidebar />
