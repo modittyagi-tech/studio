@@ -1,6 +1,7 @@
 
 import { redirect } from "next/navigation";
-import { createClient } from "@/utils/supabase/server";
+import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
+import { cookies } from "next/headers";
 import { AdminSidebar } from "@/components/admin/admin-sidebar";
 import { AdminHeader } from "@/components/admin/admin-header";
 
@@ -9,20 +10,20 @@ export default async function AdminProtectedLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const supabase = createClient();
+  const supabase = createServerComponentClient({ cookies });
 
   const {
-    data: { user },
-  } = await supabase.auth.getUser();
+    data: { session },
+  } = await supabase.auth.getSession();
 
-  if (!user) {
+  if (!session) {
     redirect("/admin/login");
   }
 
   const { data: profile } = await supabase
     .from("profiles")
     .select("role")
-    .eq("id", user.id)
+    .eq("id", session.user.id)
     .single();
 
   if (profile?.role !== "admin") {
@@ -36,7 +37,7 @@ export default async function AdminProtectedLayout({
     <div className="flex min-h-screen w-full flex-col bg-muted/40">
       <AdminSidebar />
       <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
-        <AdminHeader user={user} />
+        <AdminHeader user={session.user} />
         <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
           {children}
         </main>
