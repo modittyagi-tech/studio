@@ -1,3 +1,4 @@
+
 import { redirect } from "next/navigation";
 import { createClient } from "@/utils/supabase/server";
 import { AdminSidebar } from "@/components/admin/admin-sidebar";
@@ -26,15 +27,16 @@ export default async function AdminProtectedLayout({
     .eq("id", user.id)
     .single();
 
-  // 3. If profile is not found or role is not admin, redirect to login
+  // 3. If profile is not found or role is not admin, redirect to login.
+  // This is the primary security guard for the entire admin section.
+  // It's good practice to sign out the user if they are not an admin
+  // but are trying to access admin routes.
   if (profile?.role !== "admin") {
-    // It's good practice to sign out the user if they are not an admin
-    // but are trying to access admin routes.
     await supabase.auth.signOut();
     redirect("/admin/login");
   }
   
-  // If all checks pass, render the admin layout
+  // If all checks pass, render the admin layout with the user's data
   return (
     <div className="flex min-h-screen w-full flex-col bg-muted/40">
       <AdminSidebar />

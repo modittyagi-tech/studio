@@ -48,8 +48,9 @@ export function LoginForm() {
     if (error) {
       setError(error.message);
     } else {
-      // On successful login, redirect to the dashboard.
-      // Use router.replace to avoid adding the login page to the browser history.
+      // On successful login, refresh the page to ensure the new session is
+      // recognized by the server-side auth guard, then redirect to the dashboard.
+      router.refresh();
       router.replace('/admin/dashboard');
     }
   }

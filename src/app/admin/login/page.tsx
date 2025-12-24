@@ -5,12 +5,13 @@ import { LoginForm } from '@/components/admin/login-form'
 export default async function LoginPage() {
   const supabase = createClient()
 
+  // This check is for users who are ALREADY logged in and try to visit the login page.
+  // It redirects them away from the login page to the dashboard.
+  // It does NOT protect the login page for logged-out users.
   const {
     data: { session },
   } = await supabase.auth.getSession()
 
-  // If the user is already logged in and they land on the login page,
-  // send them to the dashboard. This is a good user experience.
   if (session) {
     const { data: profile } = await supabase
       .from('profiles')
