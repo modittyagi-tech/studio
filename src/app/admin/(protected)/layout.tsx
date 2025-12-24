@@ -1,7 +1,7 @@
 
-import { redirect } from "next/navigation";
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 import { AdminSidebar } from "@/components/admin/admin-sidebar";
 import { AdminHeader } from "@/components/admin/admin-header";
 
@@ -19,6 +19,17 @@ export default async function AdminProtectedLayout({
   if (!session) {
     redirect("/admin/login");
   }
+
+  // Optional: Check for admin role if you have one.
+  // const { data: profile } = await supabase
+  //   .from('profiles')
+  //   .select('is_admin')
+  //   .eq('id', session.user.id)
+  //   .single()
+
+  // if (!profile?.is_admin) {
+  //   redirect('/admin/login')
+  // }
   
   return (
     <div className="flex min-h-screen w-full flex-col bg-muted/40">

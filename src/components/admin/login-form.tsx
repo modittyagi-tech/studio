@@ -50,6 +50,8 @@ export function LoginForm() {
     if (error) {
       setError(error.message);
     } else {
+      // Using router.push() and router.refresh() is the standard way with app router
+      // to navigate and ensure the new session is picked up by the server layout.
       router.push("/admin/dashboard");
       router.refresh();
     }
