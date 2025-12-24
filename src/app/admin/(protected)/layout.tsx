@@ -20,16 +20,19 @@ export default async function AdminProtectedLayout({
     redirect("/admin/login");
   }
 
-  // Optional: Check for admin role if you have one.
-  // const { data: profile } = await supabase
-  //   .from('profiles')
-  //   .select('is_admin')
-  //   .eq('id', session.user.id)
-  //   .single()
+  // This check assumes you have a 'profiles' table with a 'role' column.
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('role')
+    .eq('id', session.user.id)
+    .single();
 
-  // if (!profile?.is_admin) {
-  //   redirect('/admin/login')
-  // }
+  // If the user has no profile or is not an admin, redirect them.
+  if (profile?.role !== 'admin') {
+    // You might want to sign them out here before redirecting.
+    // await supabase.auth.signOut();
+    redirect("/admin/login?error=access-denied");
+  }
   
   return (
     <div className="flex min-h-screen w-full flex-col bg-muted/40">
